@@ -1,0 +1,3189 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Voltrix职场晋升实验研究</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        html {
+            height: 100%;
+            overflow-y: auto;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Microsoft YaHei', sans-serif;
+            background: linear-gradient(135deg, #1e3c72 0%, #2a5298 100%);
+            min-height: 100vh;
+            padding: 20px;
+            margin: 0;
+            overflow-x: hidden;
+            overflow-y: auto;
+        }
+
+        .container {
+            max-width: 900px;
+            width: 100%;
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+            overflow: hidden;
+            position: relative;
+            margin: 0 auto;
+            margin-bottom: 50px;
+        }
+
+        .header {
+            background: linear-gradient(135deg, #1e3c72 0%, #2a5298 100%);
+            color: white;
+            padding: 30px;
+            text-align: center;
+            position: relative;
+        }
+
+        .header h1 {
+            font-size: 28px;
+            margin-bottom: 10px;
+        }
+
+        .header p {
+            color: #ffffff;
+            font-size: 16px;
+            font-weight: 500;
+        }
+
+        .back-button {
+            position: absolute;
+            left: 20px;
+            top: 50%;
+            transform: translateY(-50%);
+            background: rgba(255,255,255,0.2);
+            color: white;
+            border: 1px solid rgba(255,255,255,0.3);
+            padding: 8px 16px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 14px;
+            transition: all 0.3s;
+        }
+
+        .back-button:hover {
+            background: rgba(255,255,255,0.3);
+        }
+
+        .back-button:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+
+        .content {
+            padding: 40px;
+        }
+
+        .section {
+            display: none;
+            animation: fadeIn 0.5s;
+        }
+
+        .section.active {
+            display: block;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        h2 {
+            color: #333;
+            margin-bottom: 20px;
+            font-size: 24px;
+        }
+
+        h3 {
+            color: #555;
+            margin-bottom: 15px;
+            font-size: 20px;
+        }
+
+        p {
+            color: #666;
+            line-height: 1.8;
+            margin-bottom: 20px;
+        }
+
+        .info-box {
+            background: #f8f9fa;
+            border-left: 4px solid #2a5298;
+            padding: 20px;
+            margin: 20px 0;
+            border-radius: 8px;
+        }
+
+        .success-box {
+            background: linear-gradient(135deg, #ff9a56 0%, #ff6a88 100%);
+            color: white;
+            padding: 30px;
+            border-radius: 15px;
+            text-align: center;
+            margin: 20px 0;
+        }
+
+        .button-group {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+            margin-top: 30px;
+        }
+
+        button {
+            background: linear-gradient(135deg, #1e3c72 0%, #2a5298 100%);
+            color: white;
+            border: none;
+            padding: 15px 30px;
+            border-radius: 10px;
+            font-size: 16px;
+            cursor: pointer;
+            transition: all 0.3s;
+            font-weight: 500;
+        }
+
+        button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 20px rgba(42, 82, 152, 0.3);
+        }
+
+        button:disabled {
+            background: #ccc;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        .choice-button {
+            background: white;
+            color: #333;
+            border: 2px solid #e0e0e0;
+            text-align: left;
+            padding: 20px;
+            position: relative;
+            transition: all 0.3s;
+        }
+
+        .choice-button:hover:not(:disabled) {
+            border-color: #2a5298;
+            background: #f8f9fa;
+        }
+        
+        .choice-button:disabled {
+            cursor: not-allowed;
+            opacity: 0.7;
+        }
+
+        .choice-button.selected {
+            border-color: #2a5298;
+            background: #f0f4ff;
+        }
+
+        .choice-button.correct {
+            border-color: #4caf50;
+            background: #e8f5e9;
+            font-weight: 500;
+        }
+
+        .choice-button.incorrect {
+            border-color: #f44336;
+            background: #ffebee;
+            font-weight: 500;
+        }
+
+        .quiz-progress {
+            background: #e0e0e0;
+            height: 8px;
+            border-radius: 4px;
+            margin-bottom: 20px;
+            overflow: hidden;
+        }
+
+        .quiz-progress-fill {
+            background: linear-gradient(135deg, #4caf50 0%, #45a049 100%);
+            height: 100%;
+            transition: width 0.5s;
+        }
+
+        .quiz-status {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 15px;
+            color: #666;
+            font-size: 14px;
+        }
+
+        .level-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 20px 0;
+        }
+
+        .level-table th, .level-table td {
+            padding: 12px;
+            text-align: left;
+            border-bottom: 1px solid #e0e0e0;
+        }
+
+        .level-table th {
+            background: #f8f9fa;
+            font-weight: 600;
+            color: #333;
+        }
+
+        .level-table tr.highlight {
+            background: #fff3e0;
+            font-weight: 600;
+        }
+
+        .level-table tr.promoted {
+            background: linear-gradient(135deg, #e8f5e9 0%, #f0f4ff 100%);
+            font-weight: 600;
+            animation: highlightRow 1s ease-in-out;
+        }
+
+        @keyframes highlightRow {
+            0% { background: #fff; }
+            50% { background: #fffde7; }
+            100% { background: linear-gradient(135deg, #e8f5e9 0%, #f0f4ff 100%); }
+        }
+
+        .likert-scale {
+            display: flex;
+            justify-content: space-between;
+            margin: 20px 0;
+            padding: 20px;
+            background: #f8f9fa;
+            border-radius: 8px;
+        }
+
+        .likert-option {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            cursor: pointer;
+            padding: 10px;
+            border-radius: 8px;
+            transition: all 0.3s;
+        }
+
+        .likert-option:hover {
+            background: #e0e0e0;
+        }
+
+        .likert-radio {
+            width: 20px;
+            height: 20px;
+            margin-bottom: 8px;
+        }
+
+        .likert-label {
+            font-size: 12px;
+            text-align: center;
+            color: #666;
+        }
+
+        .questionnaire-item {
+            margin-bottom: 25px;
+            padding: 20px;
+            background: #fafafa;
+            border-radius: 8px;
+        }
+
+        .questionnaire-item p {
+            margin-bottom: 15px;
+            color: #333;
+            font-weight: 500;
+        }
+
+        .celebration {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            pointer-events: none;
+            z-index: 1000;
+        }
+
+        .confetti {
+            position: absolute;
+            width: 10px;
+            height: 10px;
+            background: linear-gradient(135deg, #ffd700, #ffed4e);
+            animation: fall 3s linear;
+        }
+
+        @keyframes fall {
+            to {
+                transform: translateY(100vh) rotate(360deg);
+                opacity: 0;
+            }
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 10px;
+            color: #333;
+            font-weight: 500;
+        }
+
+        .radio-group {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        .radio-option {
+            display: flex;
+            align-items: center;
+            padding: 10px;
+            background: #f8f9fa;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: background 0.3s;
+        }
+
+        .radio-option:hover {
+            background: #e8e9ea;
+        }
+
+        .checkbox-group {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        .checkbox-option {
+            display: flex;
+            align-items: center;
+            padding: 10px;
+            background: #f8f9fa;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: background 0.3s;
+        }
+
+        .checkbox-option:hover {
+            background: #e8e9ea;
+        }
+
+        .checkbox-option input[type="checkbox"] {
+            margin-right: 10px;
+        }
+
+        select {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            font-size: 16px;
+            background: white;
+        }
+
+        .score-display {
+            text-align: center;
+            padding: 20px;
+            background: #f8f9fa;
+            border-radius: 12px;
+            margin: 20px 0;
+        }
+
+        .score-value {
+            font-size: 48px;
+            font-weight: bold;
+            color: #2a5298;
+        }
+
+        .score-label {
+            color: #666;
+            margin-top: 10px;
+        }
+
+        .chat-message {
+            background: #f5f5f5;
+            border-radius: 10px;
+            padding: 15px;
+            margin: 10px 0;
+            max-width: 80%;
+            animation: slideIn 0.5s ease-out;
+        }
+
+        .chat-message.sender {
+            background: #e3f2fd;
+            margin-left: auto;
+            text-align: right;
+        }
+
+        .chat-message.receiver {
+            background: #f5f5f5;
+            margin-right: auto;
+        }
+
+        @keyframes slideIn {
+            from {
+                opacity: 0;
+                transform: translateX(-20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateX(0);
+            }
+        }
+
+        .chat-container {
+            background: white;
+            border: 1px solid #ddd;
+            border-radius: 10px;
+            padding: 20px;
+            margin: 20px 0;
+            min-height: 400px;
+        }
+
+        .chat-header {
+            font-weight: bold;
+            color: #333;
+            margin-bottom: 20px;
+            padding-bottom: 10px;
+            border-bottom: 1px solid #eee;
+        }
+
+        .error-hint {
+            color: #f44336;
+            font-size: 14px;
+            margin-top: 5px;
+        }
+
+        .mysterious-box {
+            background: #fff5e6;
+            color: #333;
+            padding: 40px;
+            border-radius: 15px;
+            margin: 20px 0;
+            box-shadow: 0 10px 25px rgba(255,152,0,0.2);
+            position: relative;
+            overflow: hidden;
+            border: 2px solid #ffcc80;
+        }
+
+        .promotion-visual {
+            margin: 30px 0;
+            padding: 20px;
+            background: #f9f9f9;
+            border-radius: 10px;
+        }
+
+        .promotion-arrow {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 20px 0;
+            font-size: 24px;
+            color: #2a5298;
+        }
+
+        .promotion-arrow span {
+            margin: 0 20px;
+        }
+
+        .promotion-comparison {
+            display: flex;
+            justify-content: space-around;
+            margin: 30px 0;
+        }
+
+        .promotion-comparison .level-box {
+            background: #f8f9fa;
+            padding: 20px;
+            border-radius: 10px;
+            text-align: center;
+            flex: 1;
+            margin: 0 10px;
+        }
+
+        .promotion-comparison .level-box.current {
+            background: #fff3e0;
+            border: 2px solid #ffa726;
+        }
+
+        .promotion-comparison .level-box.promoted {
+            background: #e8f5e9;
+            border: 2px solid #4caf50;
+        }
+
+        input[type="text"], input[type="number"], input[type="email"] {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            font-size: 16px;
+        }
+
+        .emphasis-text {
+            font-weight: bold;
+            color: #e91e63;
+            display: inline-block;
+            padding: 5px;
+            background: rgba(255,255,255,0.1);
+            border-radius: 5px;
+        }
+
+        .transition-page {
+            text-align: center;
+            padding: 40px;
+        }
+
+        .transition-box {
+            background: linear-gradient(135deg, #f6d365 0%, #fda085 100%);
+            color: #333;
+            padding: 30px;
+            border-radius: 15px;
+            margin: 20px 0;
+        }
+
+        .thank-you-box {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 40px;
+            border-radius: 20px;
+            text-align: center;
+            margin: 20px 0;
+            box-shadow: 0 20px 40px rgba(102, 126, 234, 0.3);
+        }
+
+        .thank-you-box h2 {
+            color: white;
+            font-size: 32px;
+            margin-bottom: 20px;
+        }
+
+        .thank-you-box p {
+            color: white;
+            font-size: 18px;
+            margin: 15px 0;
+        }
+
+        .loading-spinner {
+            width: 40px;
+            height: 40px;
+            margin: 0 auto;
+            border: 3px solid #f3f3f3;
+            border-top: 3px solid #2a5298;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        .timeline-item {
+            margin: 15px 0;
+            padding: 15px;
+            background: #f9f9f9;
+            border-left: 3px solid #2a5298;
+            border-radius: 5px;
+        }
+
+        .timeline-date {
+            color: #2a5298;
+            font-weight: bold;
+            margin-bottom: 5px;
+        }
+
+        .scenario-context {
+            background: #f0f4ff;
+            padding: 15px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+        }
+
+        .option-score {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            width: 30px;
+            height: 30px;
+            background: #2a5298;
+            color: white;
+            border-radius: 50%;
+            margin-right: 10px;
+            font-weight: bold;
+        }
+.level-table tr.level-past {
+    background-color: #f5f5f5; /* 旧职级使用灰色背景 */
+    text-decoration: line-through; /* 添加删除线 */
+    color: #999;
+}
+
+.level-table tr.level-current {
+    background-color: #e8f5e9; /* 新职级使用淡绿色背景，表示成功 */
+    font-weight: bold;
+    color: #2e7d32;
+}
+
+.level-table tr.level-current td:first-child::before {
+    content: '🚀';
+    display: inline-block;
+    margin-right: 8px;
+    animation: rise 1.5s ease-in-out infinite;
+}
+
+@keyframes rise {
+    0% { transform: translateY(3px); opacity: 0.5; }
+    50% { transform: translateY(-3px); opacity: 1; }
+    100% { transform: translateY(3px); opacity: 0.5; }
+}
+.choice-button.correct {
+    background: #e8f5e9;
+    border-color: #4caf50;
+    color: #2e7d32;
+    font-weight: bold;
+}
+
+.choice-button.incorrect {
+    background: #ffebee;
+    border-color: #f44336;
+    color: #c62828;
+}
+
+.choice-button:disabled {
+    cursor: not-allowed;
+    opacity: 0.8;
+}
+.fade-in-reveal {
+    animation: fadeIn 1s;
+}
+
+.confetti-piece {
+    position: absolute;
+    width: 10px;
+    height: 20px;
+    background: var(--color);
+    top: 0;
+    left: var(--x-start);
+    opacity: 0;
+    animation: fall-and-sway 4s linear forwards;
+    pointer-events: none;
+}
+
+@keyframes fall-and-sway {
+    0% {
+        transform: translateY(-100px) rotateZ(0deg);
+        opacity: 1;
+    }
+    100% {
+        transform: translateY(100vh) rotateZ(720deg);
+        opacity: 0;
+    }
+}
+    </style>
+<script src="https://cdn.jsdelivr.net/npm/leancloud-storage@4.15.0/dist/av-min.js"></script>
+</head>
+<body>
+<script>
+// 初始化全局状态 - 必须放在最前面
+window.gameState = {
+    currentSection: 'welcome',
+    navigationHistory: [],
+    yearTasks: [],
+    currentYearTask: 0,
+    yearTaskAnswers: [],
+    quizQuestions: [],
+    currentQuestionIndex: 0,
+    correctAnswers: 0,
+    quizAnswers: [],
+    quizCompleted: false,
+    promotionType: '', 
+    promotionLevel: '',
+    mysteryReason: '',
+    surveyData: {
+        reciprocal: [],
+        rule: []
+    },
+    behaviorData: {
+        reciprocal: [],
+        rule: []
+    },
+    behaviorScores: {
+        reciprocal: 0,
+        rule: 0
+    },
+    currentScenario: 0,
+    scenariosCompleted: false,
+    demographics: {},
+    personalityData: {
+        honesty: [],
+        entitlement: []
+    },
+    startTime: new Date(),
+    endTime: null,
+    participantId: ''
+};
+</script>
+
+    <div class="container">
+        <div class="header">
+            <button class="back-button" id="backBtn" onclick="goBack()" disabled>← 返回</button>
+            <h1>Voltrix 新能源汽车公司</h1>
+            <p>职场晋升实验研究</p>
+        </div>
+
+        <div class="content">
+            <div class="section active" id="welcome">
+                <h2>欢迎您参与本研究</h2>
+                <div class="info-box">
+                    <p><strong>欢迎您参与由武汉大学经济与管理学院组织管理研究团队开展的实验调研！</strong></p>
+                    <p>请在开始前认真阅读以下调研说明：</p>
+                    
+                    <ol style="margin-left: 20px; color: #666;">
+                        <li style="margin: 10px 0;">本实验旨在了解职场员工在企业被"<strong>晋升提拔</strong>"至更高岗位的经历和感受。</li>
+                        <li style="margin: 10px 0;">本实验以学术研究为目的，属于学术性质的调研，<strong>不会另作他用，也不涉及任何跟个人相关的考评</strong>。您所提供的所有信息将<strong>严格保密</strong>，您提供的选择也不会有对错之分，您可以放心参与此次实验，自由地表达您的真实想法。请确认您是<strong>自愿参与</strong>本次实验。</li>
+                        <li style="margin: 10px 0;">完成本实验约需20分钟，作为对您积极参与本次实验的回报，完成实验后将为您提供xx元奖励。</li>
+                        <li style="margin: 10px 0;">您在本实验中所提供的信息和表达的想法的真实性对于课题组得出科学可靠的研究结论至关重要，如您提供的信息不实，或者刻意隐瞒您的真实想法，将会对本次调研的科学性和有效性产生严重影响，导致课题组调研失败。您的认真参与和积极支持是本调研成功的关键所在，请您务必认真阅读题目，按照您的真实想法作答。</li>
+                    </ol>
+                    
+                    <div style="margin-top: 20px; padding-top: 20px; border-top: 1px solid #ddd;">
+                        <p style="font-size: 14px;">如您对本实验有任何问题或者建议，欢迎通过以下方式联系我们，再次感谢您的参与和支持！</p>
+                        <p style="font-size: 14px; margin-top: 10px;">
+                            魏女士 研究助理<br>
+                            武汉大学经管学院课题组<br>
+                            邮箱：scarlettw@whu.edu.cn
+                        </p>
+                    </div>
+                </div>
+              <button onclick="document.querySelector('.section.active').classList.remove('active'); document.getElementById('background').classList.add('active'); window.scrollTo(0, 0);">我已了解并同意参与</button>
+            </div>
+
+            <div class="section" id="background">
+                <h2>公司背景介绍</h2>
+                <div class="info-box">
+                    <h3>Voltrix 新能源汽车公司</h3>
+                    <p>Voltrix 是一家成立10年的新能源汽车企业，专注于智能驾驶技术的研发与创新。公司拥有完善的职级体系，为员工提供清晰的职业发展路径。</p>
+                    <p style="color: #e91e63; font-weight: bold;">注意：任职年限要求是最低条件，但晋升还需要综合绩效表现与评估结果。</p>
+                </div>
+                
+                <h3>技术序列职级体系</h3>
+                <table class="level-table" id="main-level-table">
+                    <tr>
+                        <th>职级</th>
+                        <th>职位名称</th>
+                        <th>典型职责</th>
+                        <th>任职年限要求</th>
+                    </tr>
+                    <tr>
+                        <td>L1</td>
+                        <td>初级工程师</td>
+                        <td>基础模块开发；代码维护；数据处理与测试</td>
+                        <td>1-3年</td>
+                    </tr>
+                    <tr>
+                        <td>L2</td>
+                        <td>中级工程师</td>
+                        <td>独立负责子系统开发；性能优化；缺陷修复与优化</td>
+                        <td>2-4年</td>
+                    </tr>
+                    <tr>
+                        <td>L3</td>
+                        <td>高级工程师</td>
+                        <td>主导算法设计；跨团队协作；模型部署与规模化应用</td>
+                        <td>3-5年</td>
+                    </tr>
+                    <tr>
+                        <td>L4</td>
+                        <td>专家工程师</td>
+                        <td>复杂问题解决；架构设计；指导初级工程师</td>
+                        <td>4-6年</td>
+                    </tr>
+                    <tr>
+                        <td>L5</td>
+                        <td>资深专家工程师</td>
+                        <td>制定战略研发方向；实现能带来显著成效的优化；提供技术发展路线的建议</td>
+                        <td>6-8年</td>
+                    </tr>
+                    <tr>
+                        <td>L6</td>
+                        <td>首席专家</td>
+                        <td>全公司技术领导力；前沿创新</td>
+                        <td>7-10年</td>
+                    </tr>
+                    <tr>
+                        <td>L7</td>
+                        <td>技术总监</td>
+                        <td>高管层决策；使技术与业务大方向对齐；长期战略愿景</td>
+                        <td>>10年</td>
+                    </tr>
+                </table>
+
+                <div class="info-box" style="margin-top: 30px;">
+                    <p><strong>请仔细阅读上述职级表</strong></p>
+                    <p>以下测试是为了确认您完全了解了Voltrix公司的职级序列和晋升规则，以便于开展后续的实验。</p>
+                </div>
+                
+                <div style="margin: 20px 0;">
+    <p><strong>问题1：请完成下面的职级序列表（从下拉菜单中选择正确的职位名称和任职年限要求）</strong></p>
+    <table class="level-table" style="margin-top: 15px;">
+        <tr>
+            <th>职级</th>
+            <th>职位名称</th>
+            <th>任职年限要求</th>
+        </tr>
+        <tr>
+            <td>L1</td>
+            <td>
+                <select id="test1-L1-title" style="width: 100%;">
+                    <option value="">请选择...</option>
+                    <option value="初级工程师">初级工程师</option>
+                    <option value="中级工程师">中级工程师</option>
+                    <option value="高级工程师">高级工程师</option>
+                    <option value="专家工程师">专家工程师</option>
+                    <option value="资深专家工程师">资深专家工程师</option>
+                    <option value="首席专家">首席专家</option>
+                    <option value="技术总监">技术总监</option>
+                </select>
+            </td>
+            <td>
+                <select id="test1-L1-years" style="width: 100%;">
+                    <option value="">请选择...</option>
+                    <option value="1-3年">1-3年</option>
+                    <option value="2-4年">2-4年</option>
+                    <option value="3-5年">3-5年</option>
+                    <option value="4-6年">4-6年</option>
+                    <option value="6-8年">6-8年</option>
+                    <option value="7-10年">7-10年</option>
+                    <option value=">10年">>10年</option>
+                </select>
+            </td>
+        </tr>
+        <tr>
+            <td>L2</td>
+            <td>
+                <select id="test1-L2-title" style="width: 100%;">
+                    <option value="">请选择...</option>
+                    <option value="初级工程师">初级工程师</option>
+                    <option value="中级工程师">中级工程师</option>
+                    <option value="高级工程师">高级工程师</option>
+                    <option value="专家工程师">专家工程师</option>
+                    <option value="资深专家工程师">资深专家工程师</option>
+                    <option value="首席专家">首席专家</option>
+                    <option value="技术总监">技术总监</option>
+                </select>
+            </td>
+            <td>
+                <select id="test1-L2-years" style="width: 100%;">
+                    <option value="">请选择...</option>
+                    <option value="1-3年">1-3年</option>
+                    <option value="2-4年">2-4年</option>
+                    <option value="3-5年">3-5年</option>
+                    <option value="4-6年">4-6年</option>
+                    <option value="6-8年">6-8年</option>
+                    <option value="7-10年">7-10年</option>
+                    <option value=">10年">>10年</option>
+                </select>
+            </td>
+        </tr>
+        <tr>
+            <td>L3</td>
+            <td>
+                <select id="test1-L3-title" style="width: 100%;">
+                    <option value="">请选择...</option>
+                    <option value="初级工程师">初级工程师</option>
+                    <option value="中级工程师">中级工程师</option>
+                    <option value="高级工程师">高级工程师</option>
+                    <option value="专家工程师">专家工程师</option>
+                    <option value="资深专家工程师">资深专家工程师</option>
+                    <option value="首席专家">首席专家</option>
+                    <option value="技术总监">技术总监</option>
+                </select>
+            </td>
+            <td>
+                <select id="test1-L3-years" style="width: 100%;">
+                    <option value="">请选择...</option>
+                    <option value="1-3年">1-3年</option>
+                    <option value="2-4年">2-4年</option>
+                    <option value="3-5年">3-5年</option>
+                    <option value="4-6年">4-6年</option>
+                    <option value="6-8年">6-8年</option>
+                    <option value="7-10年">7-10年</option>
+                    <option value=">10年">>10年</option>
+                </select>
+            </td>
+        </tr>
+        <tr>
+            <td>L4</td>
+            <td>
+                <select id="test1-L4-title" style="width: 100%;">
+                    <option value="">请选择...</option>
+                    <option value="初级工程师">初级工程师</option>
+                    <option value="中级工程师">中级工程师</option>
+                    <option value="高级工程师">高级工程师</option>
+                    <option value="专家工程师">专家工程师</option>
+                    <option value="资深专家工程师">资深专家工程师</option>
+                    <option value="首席专家">首席专家</option>
+                    <option value="技术总监">技术总监</option>
+                </select>
+            </td>
+            <td>
+                <select id="test1-L4-years" style="width: 100%;">
+                    <option value="">请选择...</option>
+                    <option value="1-3年">1-3年</option>
+                    <option value="2-4年">2-4年</option>
+                    <option value="3-5年">3-5年</option>
+                    <option value="4-6年">4-6年</option>
+                    <option value="6-8年">6-8年</option>
+                    <option value="7-10年">7-10年</option>
+                    <option value=">10年">>10年</option>
+                </select>
+            </td>
+        </tr>
+        <tr>
+            <td>L5</td>
+            <td>
+                <select id="test1-L5-title" style="width: 100%;">
+                    <option value="">请选择...</option>
+                    <option value="初级工程师">初级工程师</option>
+                    <option value="中级工程师">中级工程师</option>
+                    <option value="高级工程师">高级工程师</option>
+                    <option value="专家工程师">专家工程师</option>
+                    <option value="资深专家工程师">资深专家工程师</option>
+                    <option value="首席专家">首席专家</option>
+                    <option value="技术总监">技术总监</option>
+                </select>
+            </td>
+            <td>
+                <select id="test1-L5-years" style="width: 100%;">
+                    <option value="">请选择...</option>
+                    <option value="1-3年">1-3年</option>
+                    <option value="2-4年">2-4年</option>
+                    <option value="3-5年">3-5年</option>
+                    <option value="4-6年">4-6年</option>
+                    <option value="6-8年">6-8年</option>
+                    <option value="7-10年">7-10年</option>
+                    <option value=">10年">>10年</option>
+                </select>
+            </td>
+        </tr>
+        <tr>
+            <td>L6</td>
+            <td>
+                <select id="test1-L6-title" style="width: 100%;">
+                    <option value="">请选择...</option>
+                    <option value="初级工程师">初级工程师</option>
+                    <option value="中级工程师">中级工程师</option>
+                    <option value="高级工程师">高级工程师</option>
+                    <option value="专家工程师">专家工程师</option>
+                    <option value="资深专家工程师">资深专家工程师</option>
+                    <option value="首席专家">首席专家</option>
+                    <option value="技术总监">技术总监</option>
+                </select>
+            </td>
+            <td>
+                <select id="test1-L6-years" style="width: 100%;">
+                    <option value="">请选择...</option>
+                    <option value="1-3年">1-3年</option>
+                    <option value="2-4年">2-4年</option>
+                    <option value="3-5年">3-5年</option>
+                    <option value="4-6年">4-6年</option>
+                    <option value="6-8年">6-8年</option>
+                    <option value="7-10年">7-10年</option>
+                    <option value=">10年">>10年</option>
+                </select>
+            </td>
+        </tr>
+        <tr>
+            <td>L7</td>
+            <td>
+                <select id="test1-L7-title" style="width: 100%;">
+                    <option value="">请选择...</option>
+                    <option value="初级工程师">初级工程师</option>
+                    <option value="中级工程师">中级工程师</option>
+                    <option value="高级工程师">高级工程师</option>
+                    <option value="专家工程师">专家工程师</option>
+                    <option value="资深专家工程师">资深专家工程师</option>
+                    <option value="首席专家">首席专家</option>
+                    <option value="技术总监">技术总监</option>
+                </select>
+            </td>
+            <td>
+                <select id="test1-L7-years" style="width: 100%;">
+                    <option value="">请选择...</option>
+                    <option value="1-3年">1-3年</option>
+                    <option value="2-4年">2-4年</option>
+                    <option value="3-5年">3-5年</option>
+                    <option value="4-6年">4-6年</option>
+                    <option value="6-8年">6-8年</option>
+                    <option value="7-10年">7-10年</option>
+                    <option value=">10年">>10年</option>
+                </select>
+            </td>
+        </tr>
+    </table>
+    <div id="test1-error" class="error-hint"></div>
+</div>
+
+                <div style="margin: 20px 0;">
+                    <p><strong>问题2：根据常规晋升路径，中级工程师的下一个晋升职位是什么？</strong></p>
+                    <select id="test2-answer">
+                        <option value="">请选择...</option>
+                        <option value="初级工程师">初级工程师</option>
+                        <option value="高级工程师">高级工程师</option>
+                        <option value="专家工程师">专家工程师</option>
+                        <option value="资深专家工程师">资深专家工程师</option>
+                        <option value="首席专家">首席专家</option>
+                    </select>
+                    <div id="test2-error" class="error-hint"></div>
+                </div>
+
+                <div style="margin: 20px 0;">
+                    <p><strong>问题3：从各职级的任职年限要求来看，入职4年的工程师可能处于哪些职级？（多选）</strong></p>
+                    <div class="checkbox-group">
+                        <label class="checkbox-option">
+                            <input type="checkbox" name="test3" value="L1"> L1
+                        </label>
+                        <label class="checkbox-option">
+                            <input type="checkbox" name="test3" value="L2"> L2
+                        </label>
+                        <label class="checkbox-option">
+                            <input type="checkbox" name="test3" value="L3"> L3
+                        </label>
+                        <label class="checkbox-option">
+                            <input type="checkbox" name="test3" value="L4"> L4
+                        </label>
+                        <label class="checkbox-option">
+                            <input type="checkbox" name="test3" value="L5"> L5
+                        </label>
+                    </div>
+                    <div id="test3-error" class="error-hint"></div>
+                </div>
+
+                <button onclick="validateAndProceed()">提交答案</button>
+            </div>
+
+            <div class="section" id="test-success">
+                <div class="success-box">
+                    <h2 style="color: white;">🎉 恭喜！</h2>
+                    <p style="font-size: 18px; color: white;">您已经完全了解了Voltrix公司的职级序列！</p>
+                    <p style="font-size: 20px; font-weight: bold; margin-top: 20px; color: white;">
+                        现在让我们进入具体的任务场景
+                    </p>
+                </div>
+                <button onclick="nextSection('test-success', 'personal-background')">进入任务场景</button>
+            </div>
+
+            <div class="section" id="personal-background">
+                <h2>您的角色背景</h2>
+                
+                <table class="level-table">
+                    <tr>
+                        <th>职级</th>
+                        <th>职位名称</th>
+                        <th>典型职责</th>
+                        <th>任职年限要求</th>
+                    </tr>
+                    <tr class="highlight">
+                        <td>L1</td>
+                        <td>初级工程师</td>
+                        <td>基础模块开发；代码维护；数据处理与测试</td>
+                        <td>1-3年</td>
+                    </tr>
+                    <tr>
+                        <td>L2</td>
+                        <td>中级工程师</td>
+                        <td>独立负责子系统开发；性能优化；缺陷修复与优化</td>
+                        <td>2-4年</td>
+                    </tr>
+                    <tr>
+                        <td>L3</td>
+                        <td>高级工程师</td>
+                        <td>主导算法设计；跨团队协作；模型部署与规模化应用</td>
+                        <td>3-5年</td>
+                    </tr>
+                    <tr>
+                        <td>L4</td>
+                        <td>专家工程师</td>
+                        <td>复杂问题解决；架构设计；指导初级工程师</td>
+                        <td>4-6年</td>
+                    </tr>
+                    <tr>
+                        <td>L5</td>
+                        <td>资深专家工程师</td>
+                        <td>制定战略研发方向；实现能带来显著成效的优化；提供技术发展路线的建议</td>
+                        <td>6-8年</td>
+                    </tr>
+                    <tr>
+                        <td>L6</td>
+                        <td>首席专家</td>
+                        <td>全公司技术领导力；前沿创新</td>
+                        <td>7-10年</td>
+                    </tr>
+                    <tr>
+                        <td>L7</td>
+                        <td>技术总监</td>
+                        <td>高管层决策；使技术与业务大方向对齐；长期战略愿景</td>
+                        <td>>10年</td>
+                    </tr>
+                </table>
+                
+                <div class="info-box">
+                    <h3>您的个人背景</h3>
+                    <p style="color: #333;">您是智能驾驶部门的算法工程师，<strong>入职2年</strong>，目前职级为<strong>L1初级工程师</strong>。您负责基础模块开发、代码维护和数据处理与测试工作。</p>
+                    <p style="color: #333; font-weight: bold;">接下来，您将经历从第二年到第三年这一年中遇到的各种任务挑战。</p>
+                </div>
+                
+               <button onclick="startYearTasks()">开始第三年的工作</button>
+            </div>
+
+            <div class="section" id="year-tasks">
+                <h2>您的工作历程（第3年）</h2>
+                <div class="info-box">
+                    <p>以下是您在第三年到第四年期间遇到的各种任务挑战，请根据具体情况选择最合适的处理方式。</p>
+                </div>
+                
+                <div id="year-task-container"></div>
+                <div class="button-group" id="year-task-options"></div>
+                <button id="next-year-task-btn" onclick="nextYearTask()" style="display: none;">下一个任务</button>
+            </div>
+
+<div class="section" id="year-tasks-summary">
+                <h2>第三年工作总结</h2>
+                <div class="info-box" id="year-tasks-result-summary">
+                    </div>
+                <p>您已经完成了第三年的所有工作挑战。现在，公司将根据您这一年的表现进入年度职级评估程序。</p>
+                <button id="view-assessment-btn">查看评估结果</button>
+            </div>
+            
+
+            <div class="section" id="year-promotion">
+    <h2>年度职级评估结果</h2>
+    <div class="success-box">
+        <h3 style="color: white;">🎊 恭喜晋升！</h3>
+        <p style="color: white;">依据公司现有的晋升体系，在年度职级评估中，综合您这一年各方面的表现、贡献与入职年限，经过评估您从L1被提拔至L2。</p>
+    </div>
+
+    <table class="level-table" style="margin-top: 30px; margin-bottom: 20px;">
+        <thead>
+            <tr>
+                <th>职级</th>
+                <th>职位名称</th>
+                <th>典型职责</th>
+                <th>任职年限要求</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr class="level-past">
+                <td>L1</td>
+                <td>初级工程师</td>
+                <td>基础模块开发；代码维护；数据处理与测试</td>
+                <td>1-3年</td>
+            </tr>
+            <tr class="level-current">
+                <td>L2</td>
+                <td>中级工程师</td>
+                <td>独立负责子系统开发；性能优化；缺陷修复与优化</td>
+                <td>2-4年</td>
+            </tr>
+            <tr>
+                <td>L3</td>
+                <td>高级工程师</td>
+                <td>主导算法设计；跨团队协作；模型部署与规模化应用</td>
+                <td>3-5年</td>
+            </tr>
+            <tr>
+                <td>L4</td>
+                <td>专家工程师</td>
+                <td>复杂问题解决；架构设计；指导初级工程师</td>
+                <td>4-6年</td>
+            </tr>
+            <tr>
+                <td>L5</td>
+                <td>资深专家工程师</td>
+                <td>制定战略研发方向；实现能带来显著成效的优化；提供技术发展路线的建议</td>
+                <td>6-8年</td>
+            </tr>
+            <tr>
+                <td>L6</td>
+                <td>首席专家</td>
+                <td>全公司技术领导力；前沿创新</td>
+                <td>7-10年</td>
+            </tr>
+            <tr>
+                <td>L7</td>
+                <td>技术总监</td>
+                <td>高管层决策；使技术与业务大方向对齐；长期战略愿景</td>
+                <td>>10年</td>
+            </tr>
+        </tbody>
+    </table>
+    <div class="info-box">
+        <h3>您的新职位</h3>
+        <p><strong>职级：L2 - 中级工程师</strong></p>
+        <p><strong>入职年限：3年</strong></p>
+        <p><strong>典型职责：</strong>独立负责子系统开发；性能优化；缺陷修复与优化</p>
+    </div>
+    
+    <button onclick="startMainQuiz()">进入第四年工作</button>
+</div>
+                
+       
+
+            <div class="section" id="quiz-intro">
+                <h2>您的工作历程（第4年）</h2>
+                
+                <table class="level-table">
+                    <tr>
+                        <th>职级</th>
+                        <th>职位名称</th>
+                        <th>典型职责</th>
+                        <th>任职年限要求</th>
+                    </tr>
+                    <tr>
+                        <td>L1</td>
+                        <td>初级工程师</td>
+                        <td>基础模块开发；代码维护；数据处理与测试</td>
+                        <td>1-3年</td>
+                    </tr>
+                    <tr class="highlight">
+                        <td>L2</td>
+                        <td>中级工程师</td>
+                        <td>独立负责子系统开发；性能优化；缺陷修复与优化</td>
+                        <td>2-4年</td>
+                    </tr>
+                    <tr>
+                        <td>L3</td>
+                        <td>高级工程师</td>
+                        <td>主导算法设计；跨团队协作；模型部署与规模化应用</td>
+                        <td>3-5年</td>
+                    </tr>
+                    <tr>
+                        <td>L4</td>
+                        <td>专家工程师</td>
+                        <td>复杂问题解决；架构设计；指导初级工程师</td>
+                        <td>4-6年</td>
+                    </tr>
+                    <tr>
+                        <td>L5</td>
+                        <td>资深专家工程师</td>
+                        <td>制定战略研发方向；实现能带来显著成效的优化；提供技术发展路线的建议</td>
+                        <td>6-8年</td>
+                    </tr>
+                    <tr>
+                        <td>L6</td>
+                        <td>首席专家</td>
+                        <td>全公司技术领导力；前沿创新</td>
+                        <td>7-10年</td>
+                    </tr>
+                    <tr>
+                        <td>L7</td>
+                        <td>技术总监</td>
+                        <td>高管层决策；使技术与业务大方向对齐；长期战略愿景</td>
+                        <td>>10年</td>
+                    </tr>
+                </table>
+                
+                <div class="info-box">
+    <p style="color: #333;">进入第四年，您凭借过硬的技术实力在团队中脱颖而出。现在，公司考虑将一个关乎未来市场地位的核心项目——<strong style="color: #2a5298;">攻克车辆轨迹预测算法的精准度问题</strong>——正式交到您的手上。</p>
+    <p style="color: #333; font-weight: bold;">这不仅是对您委以重任，更是对您技术能力的极大考验。项目的成败，将直接影响公司在智能驾驶领域的行业竞争力。</p>
+</div>
+
+<div class="info-box" style="border-left-color: #e91e63; margin-top: 30px;">
+    <h3 style="font-size: 22px; color: #333;">新的核心任务</h3>
+    <p style="font-size: 18px; line-height: 1.8;">凭借您在第三年的出色表现，公司决定将这一核心项目——<strong style="color: #2a5298;">“攻克车辆轨迹预测算法的精准度问题”</strong>——正式交由您负责！</p>
+</div>
+
+                <button onclick="startQuiz()">开始任务</button>
+            </div>
+
+            <div class="section" id="quiz">
+                <div class="quiz-status">
+                    <span>任务 <span id="current-question">1</span> / 10</span>
+                    <span>第4年工作进度</span>
+                </div>
+                <div class="quiz-progress">
+                    <div class="quiz-progress-fill" id="progress-fill" style="width: 10%"></div>
+                </div>
+                
+                <div id="question-container"></div>
+                <div class="button-group" id="quiz-options"></div>
+                <button id="next-question-btn" onclick="nextQuestion()" style="display: none; margin-top: 20px;">下一个任务</button>
+            </div>
+
+            <div class="section" id="quiz-result">
+                <h2>年度职级考核</h2>
+                <div class="info-box">
+    <p>经过这一年的不懈努力，您终于带领团队攻克了车辆轨迹预测算法的精准度难题，完成了这个至关重要的项目。</p>
+    <p style="font-weight: bold; margin-top: 15px;">在等待项目成果的市场反馈的同时，新一年的职级评估考核也已到来……</p>
+</div>
+                <button id="continue-btn" onclick="proceedAfterQuiz()">查看考核结果</button>
+            </div>
+
+            <div class="section" id="promotion-decision">
+                <div id="celebration"></div>
+                <h2>公司决定</h2>
+                <div id="promotion-content"></div>
+                <div id="promotion-visual"></div>
+                <button onclick="showMysteryNote()">继续</button>
+            </div>
+
+            <div class="section" id="mystery-note">
+                <div class="mysterious-box">
+                    <h2>📋 意外发现</h2>
+                    <p style="opacity: 0.7; margin-bottom: 20px;">您偶然看到了公司HR的聊天记录...</p>
+                    <div id="chat-display" style="display: none;"></div>
+                    <button id="continue-after-mystery" onclick="showSurvey()" style="display: none; margin-top: 30px;">继续</button>
+                </div>
+            </div>
+
+            <div class="section" id="survey">
+                <h2>当前感受评估</h2>
+                <p>请根据您当前的真实感受，对以下陈述进行评分：</p>
+                
+                <h3 style="margin-top: 30px;">第一部分：这次晋升的经历，让我感觉...</h3>
+                <div id="rule-items"></div>
+                
+                <h3 style="margin-top: 30px;">第二部分：这次晋升的经历，让我感觉...</h3>
+                <div id="reciprocal-items"></div>
+                
+                <button onclick="submitSurvey()">提交并继续</button>
+            </div>
+
+            <div class="section" id="management-scenarios">
+                <h2>新岗位工作场景</h2>
+                <div id="scenario-content"></div>
+                <div class="button-group" id="scenario-options"></div>
+            </div>
+
+            <div class="section" id="pre-demographics">
+                <div class="transition-page">
+                    <div class="transition-box">
+                        <h2>场景任务完成</h2>
+                        <p style="font-size: 18px; margin: 20px 0;">
+                            您已经完成了所有的工作场景决策！
+                        </p>
+                        <p>接下来，我们需要收集一些基本信息。</p>
+                        <p style="font-weight: bold; margin-top: 20px;">
+                            请根据您的实际情况如实填写。<br>
+                            所有信息仅用于学术研究，我们将严格保密。
+                        </p>
+                    </div>
+                </div>
+                <button onclick="nextSection('pre-demographics', 'demographics')">继续</button>
+            </div>
+
+            <div class="section" id="demographics">
+                <h2>基本信息调查</h2>
+                <p>请填写以下信息，所有信息将严格保密：</p>
+                
+                <div class="form-group">
+                    <label>您是否理解了实验中的阅读材料、题目以及选项？</label>
+                    <div class="likert-scale">
+                        <label class="likert-option">
+                            <input type="radio" name="understanding" value="1" class="likert-radio">
+                            <span class="likert-label">完全不理解</span>
+                        </label>
+                        <label class="likert-option">
+                            <input type="radio" name="understanding" value="2" class="likert-radio">
+                            <span class="likert-label">2</span>
+                        </label>
+                        <label class="likert-option">
+                            <input type="radio" name="understanding" value="3" class="likert-radio">
+                            <span class="likert-label">3</span>
+                        </label>
+                        <label class="likert-option">
+                            <input type="radio" name="understanding" value="4" class="likert-radio">
+                            <span class="likert-label">4</span>
+                        </label>
+                        <label class="likert-option">
+                            <input type="radio" name="understanding" value="5" class="likert-radio">
+                            <span class="likert-label">5</span>
+                        </label>
+                        <label class="likert-option">
+                            <input type="radio" name="understanding" value="6" class="likert-radio">
+                            <span class="likert-label">6</span>
+                        </label>
+                        <label class="likert-option">
+                            <input type="radio" name="understanding" value="7" class="likert-radio">
+                            <span class="likert-label">完全理解</span>
+                        </label>
+                    </div>
+                </div>
+                
+                <div class="form-group">
+                    <label>性别：</label>
+                    <div class="radio-group">
+                        <label class="radio-option">
+                            <input type="radio" name="gender" value="男"> 男
+                        </label>
+                        <label class="radio-option">
+                            <input type="radio" name="gender" value="女"> 女
+                        </label>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label>年龄：</label>
+                    <input type="number" id="age-input" placeholder="请输入您的年龄" min="18" max="100">
+                </div>
+
+                <div class="form-group">
+                    <label>教育程度：</label>
+                    <div class="radio-group">
+                        <label class="radio-option">
+                            <input type="radio" name="education" value="初中/中专及以下"> 初中/中专及以下
+                        </label>
+                        <label class="radio-option">
+                            <input type="radio" name="education" value="高中/大专"> 高中/大专
+                        </label>
+                        <label class="radio-option">
+                            <input type="radio" name="education" value="本科"> 本科
+                        </label>
+                        <label class="radio-option">
+                            <input type="radio" name="education" value="硕士"> 硕士
+                        </label>
+                        <label class="radio-option">
+                            <input type="radio" name="education" value="博士及以上"> 博士及以上
+                        </label>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label>在当前组织的工作年限：</label>
+                    <div class="radio-group">
+                        <label class="radio-option">
+                            <input type="radio" name="experience" value="<1"> 1年以下
+                        </label>
+                        <label class="radio-option">
+                            <input type="radio" name="experience" value="1-3"> 1-3年
+                        </label>
+                        <label class="radio-option">
+                            <input type="radio" name="experience" value="4-6"> 4-6年
+                        </label>
+                        <label class="radio-option">
+                            <input type="radio" name="experience" value="7-10"> 7-10年
+                        </label>
+                        <label class="radio-option">
+                            <input type="radio" name="experience" value="10+"> 10年以上
+                        </label>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label>您是否有机动车驾驶证？</label>
+                    <div class="radio-group">
+                        <label class="radio-option">
+                            <input type="radio" name="has-license" value="yes" onchange="toggleDrivingYears()"> 是
+                        </label>
+                        <label class="radio-option">
+                            <input type="radio" name="has-license" value="no" onchange="toggleDrivingYears()"> 否
+                        </label>
+                    </div>
+                </div>
+
+                <div class="form-group" id="driving-years-group" style="display: none;">
+                    <label>您的驾龄有多长？</label>
+                    <div class="radio-group">
+                        <label class="radio-option">
+                            <input type="radio" name="driving-years" value="<1"> 1年以下
+                        </label>
+                        <label class="radio-option">
+                            <input type="radio" name="driving-years" value="1-3"> 1-3年
+                        </label>
+                        <label class="radio-option">
+                            <input type="radio" name="driving-years" value="4-6"> 4-6年
+                        </label>
+                        <label class="radio-option">
+                            <input type="radio" name="driving-years" value="7-10"> 7-10年
+                        </label>
+                        <label class="radio-option">
+                            <input type="radio" name="driving-years" value="10+"> 10年以上
+                        </label>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label>您是否使用过或正在使用车辆的智能驾驶系统？</label>
+                    <div class="radio-group">
+                        <label class="radio-option">
+                            <input type="radio" name="smart-driving" value="yes"> 是
+                        </label>
+                        <label class="radio-option">
+                            <input type="radio" name="smart-driving" value="no"> 否
+                        </label>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label>您是否有算法相关的工作或学习经历？</label>
+                    <div class="radio-group">
+                        <label class="radio-option">
+                            <input type="radio" name="algorithm-exp" value="yes"> 是
+                        </label>
+                        <label class="radio-option">
+                            <input type="radio" name="algorithm-exp" value="no"> 否
+                        </label>
+                    </div>
+                </div>
+
+                <button onclick="continueToPersonality()">继续</button>
+            </div>
+
+            <div class="section" id="personality">
+                <h2>个人特质评估</h2>
+                
+                <div class="form-group">
+                    <label>在1（极端厌恶风险）到7（极端喜爱风险）的尺度上，您认为自己对风险的态度是？</label>
+                    <div class="likert-scale">
+                        <label class="likert-option">
+                            <input type="radio" name="risk-preference" value="1" class="likert-radio">
+                            <span class="likert-label">1<br>极端厌恶风险</span>
+                        </label>
+                        <label class="likert-option">
+                            <input type="radio" name="risk-preference" value="2" class="likert-radio">
+                            <span class="likert-label">2</span>
+                        </label>
+                        <label class="likert-option">
+                            <input type="radio" name="risk-preference" value="3" class="likert-radio">
+                            <span class="likert-label">3</span>
+                        </label>
+                        <label class="likert-option">
+                            <input type="radio" name="risk-preference" value="4" class="likert-radio">
+                            <span class="likert-label">4<br>中立</span>
+                        </label>
+                        <label class="likert-option">
+                            <input type="radio" name="risk-preference" value="5" class="likert-radio">
+                            <span class="likert-label">5</span>
+                        </label>
+                        <label class="likert-option">
+                            <input type="radio" name="risk-preference" value="6" class="likert-radio">
+                            <span class="likert-label">6</span>
+                        </label>
+                        <label class="likert-option">
+                            <input type="radio" name="risk-preference" value="7" class="likert-radio">
+                            <span class="likert-label">7<br>极端喜爱风险</span>
+                        </label>
+                    </div>
+                </div>
+
+                <h3 style="margin-top: 30px;">请对以下陈述进行评分（1完全不同意-7完全同意）</h3>
+                
+                <div id="honesty-items"></div>
+                
+                <h3 style="margin-top: 30px;">请对以下陈述进行评分（1完全不同意-7完全同意）</h3>
+                
+                <div id="entitlement-items"></div>
+                
+                <button onclick="finishExperiment()">提交并完成</button>
+            </div>
+
+            <div class="section" id="complete">
+                <h2>正在提交数据...</h2>
+                <div class="info-box">
+                    <div style="text-align: center;">
+                        <div class="loading-spinner"></div>
+                        <p>请稍候，正在安全保存您的数据...</p>
+                        <p style="color: #666; font-size: 14px;">请勿关闭页面</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="section" id="thank-you">
+                <div class="thank-you-box">
+                    <h2>🌟 感谢您的参与！</h2>
+                    <p>您已成功完成本次实验研究</p>
+                    <p style="font-size: 16px; margin-top: 30px; opacity: 0.9;">
+                        您的宝贵意见对我们的研究至关重要<br>
+                        您的参与将为组织行为学的发展做出重要贡献
+                    </p>
+                </div>
+                <div class="info-box" style="text-align: center; margin-top: 30px;">
+                    <p style="font-size: 16px;">
+                        <strong>您的参与者编号：</strong><br>
+                        <span id="participant-id-display" style="font-size: 20px; color: #2a5298; font-weight: bold;"></span>
+                    </p>
+                    <p style="color: #666; font-size: 14px; margin-top: 20px;">
+                        如有任何问题，请凭此编号与研究团队联系<br>
+                        再次感谢您的支持与配合！
+                    </p>
+                    <p style="margin-top: 30px; font-size: 18px;">
+                        祝您生活愉快！
+                    </p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+// LeanCloud 初始化
+AV.init({
+    appId: "UAoeCrbeqysPGyrbgMKFmQbP-gzGzoHsz",
+    appKey: "mKmOYdptYxijA0hoqqFO0Z7x",
+    serverURL: "https://uaoecrbe.lc-cn-n1-shared.com"
+});
+
+// L1第三年的7道简单任务题
+const yearTasks = [
+    {
+        date: "第3年1月",
+        context: "您负责的车辆数据预处理模块出现了一个小bug，导致部分数据格式不一致。",
+        question: "您会选择：",
+        options: [
+            "立即修复bug并更新文档",
+            "暂时忽略，等累积更多问题一起处理",
+            "让实习生去处理",
+            "推给其他模块负责人"
+        ],
+        correct: 0
+    },
+    {
+        date: "第3年3月",
+        context: "团队需要对现有的测试框架进行升级，您被分配负责编写新的测试用例。",
+        question: "您将怎样应对：",
+        options: [
+            "参考业界最佳实践编写全面的测试用例",
+            "随便写几个应付了事",
+            "复制旧的测试用例稍作修改",
+            "说自己不会，推给别人"
+        ],
+        correct: 0
+    },
+    {
+        date: "第3年5月",
+        context: "代码审查时发现您维护的模块有性能瓶颈，需要进行优化。",
+        question: "您会选择：",
+        options: [
+            "不管它，反正能运行",
+            "简单调整一下参数",
+            "深入分析并重构关键代码",
+            "删除一些功能来提升性能"
+        ],
+        correct: 2
+    },
+    {
+        date: "第3年7月",
+        context: "新项目需要集成一个第三方库，您负责评估和集成工作。",
+        question: "您将怎样处理：",
+        options: [
+            "随便选一个看起来不错的",
+            "仔细对比多个选项，选择最适合的",
+            "让领导决定用哪个",
+            "用自己熟悉的，不管合不合适"
+        ],
+        correct: 1
+    },
+    {
+        date: "第3年9月",
+        context: "数据处理管道偶尔会出现数据丢失的情况，需要排查原因。",
+        question: "您会选择：",
+        options: [
+            "认为是正常现象，不用管",
+            "简单看看日志，找不到就算了",
+            "推测可能的原因，随便改改",
+            "系统性地排查每个环节，找出根本原因"
+        ],
+        correct: 3
+    },
+    {
+        date: "第3年11月",
+        context: "年底需要整理技术文档，为新员工培训做准备。",
+        question: "您将如何应对：",
+        options: [
+            "编写详细清晰的文档，包含示例代码",
+            "从网上复制一些通用文档",
+            "写个简单大纲交差",
+            "说太忙了，没时间写"
+        ],
+        correct: 0
+    },
+    {
+        date: "第3年12月",
+        context: "年度总结时，需要展示您这一年的主要贡献和成长。",
+        question: "您会选择：",
+        options: [
+            "随便写写，应付了事",
+            "夸大自己的贡献",
+            "只列出做过的事，不做总结",
+            "认真总结技术成长和实际贡献"
+        ],
+        correct: 3
+    }
+];
+
+// L2第四年的10道题（6简单+2中等+2难）
+const mainQuizQuestions = [
+    {
+        date: "第4年1月",
+        context: "新年伊始，您开始负责车辆轨迹预测算法项目。首先需要搭建基础的开发环境。",
+        question: "您会选择：",
+        options: [
+            "使用标准化的Docker容器确保环境一致性",
+            "在自己电脑上随便装一些软件",
+            "让别人帮忙配置",
+            "用公司旧的环境凑合"
+        ],
+        correct: 0,
+        difficulty: "easy"
+    },
+    {
+        date: "第4年2月",
+        context: "轨迹预测算法需要处理大量的传感器数据，您发现现有的数据格式不统一。",
+        question: "您将如何处理：",
+        options: [
+            "忽略格式问题，直接使用",
+            "手动转换每批数据",
+            "开发统一的数据预处理pipeline",
+            "只用格式正确的数据"
+        ],
+        correct: 2,
+        difficulty: "easy"
+    },
+    {
+        date: "第4年3月",
+        context: "算法在直道预测准确率达到85%，但在复杂路口只有60%。产品经理询问改进方案。",
+        question: "您会选择：",
+        options: [
+            "告诉产品经理这已经是极限了",
+            "分析路口场景特点，设计针对性的改进方案",
+            "建议降低路口场景的使用",
+            "把责任推给数据质量问题"
+        ],
+        correct: 1,
+        difficulty: "medium"
+    },
+    {
+        date: "第4年4月",
+        context: "测试发现算法在雨天场景下性能下降30%，这是之前没有考虑到的。",
+        question: "您将怎样应对：",
+        options: [
+            "收集雨天数据，重新训练模型",
+            "说明雨天本来就该性能下降",
+            "简单调整阈值应付",
+            "建议雨天关闭该功能"
+        ],
+        correct: 0,
+        difficulty: "easy"
+    },
+    {
+        date: "第4年5月",
+        context: "竞争对手发布了新的轨迹预测技术，声称准确率提升15%。团队压力很大。",
+        question: "您会选择：",
+        options: [
+            "研究对手的技术论文，分析改进思路",
+            "认为对手在夸大宣传",
+            "继续按原计划开发",
+            "建议公司挖对方的人"
+        ],
+        correct: 0,
+        difficulty: "easy"
+    },
+    {
+        date: "第4年7月",
+        context: "算法需要同时处理车辆、行人、自行车的轨迹预测，计算资源严重不足。",
+        question: "您将如何解决：",
+        options: [
+            "要求公司买更多服务器",
+            "去掉一些预测目标",
+            "优化算法架构，提高计算效率",
+            "降低预测精度换取速度"
+        ],
+        correct: 2,
+        difficulty: "hard"
+    },
+    {
+        date: "第4年8月",
+        context: "客户反馈在高速公路场景预测经常出现异常跳变，影响驾驶体验。",
+        question: "您会选择：",
+        options: [
+            "增加平滑滤波简单处理",
+            "深入分析异常案例，从根本上解决",
+            "说这是正常现象",
+            "让客户降低使用频率"
+        ],
+        correct: 1,
+        difficulty: "easy"
+    },
+    {
+        date: "第4年9月",
+        context: "公司要求在3个月内将预测时间从3秒延长到5秒，这需要重大技术突破。",
+        question: "您将怎样应对：",
+        options: [
+            "直接说做不到",
+            "简单外推现有预测结果",
+            "研究长时预测的新方法，制定技术路线",
+            "答应下来但不一定能完成"
+        ],
+        correct: 2,
+        difficulty: "hard"
+    },
+    {
+        date: "第4年10月",
+        context: "算法准备部署到实车测试，需要满足车规级的安全标准。",
+        question: "您会选择：",
+        options: [
+            "按照安全标准逐项检查和改进",
+            "认为算法没问题，直接部署",
+            "简单测试一下就上车",
+            "让测试部门负责安全问题"
+        ],
+        correct: 0,
+        difficulty: "easy"
+    },
+    {
+        date: "第4年11月",
+        context: "年底项目总结，轨迹预测准确率提升了25%，达到业界先进水平。",
+        question: "您将如何总结：",
+        options: [
+            "只强调自己的贡献",
+            "客观总结团队协作和技术突破",
+            "认为还不够好，不值得总结",
+            "夸大成果，争取更多奖励"
+        ],
+        correct: 1,
+        difficulty: "medium"
+    }
+];
+
+// 规则接受度题项
+const ruleItems = [
+    "公司里的规则是可以被打破的。",
+    "必要的时候可以打破公司里的规则。",
+    "打破规则是可以被公司所接受的。",
+    "处理特殊情况不需要考虑是否违背公司里的规则。",
+    "公司里的规则只适用于大部分人，而不是所有人。",
+    "公司里的规则是可以为某些人而改变的。",
+    "某些人可以不受公司规则的限制和束缚。",
+    "有影响力的人甚至可以改变公司的规则。",
+    "打破规则不一定会受到公司的惩罚。",
+    "打破公司里的规则不一定会带来负面结果。"
+];
+
+// 互惠动机题项
+const reciprocalItems = [
+    "我觉得我有义务尽我所能帮助公司实现目标。",
+    "我在工作中应该为公司的目标贡献100%的精力。",
+    "我有责任确保高质量地完成工作，这是我对公司应尽的义务。",
+    "我有义务确保公司的客户得到周到的服务和满意的结果，这是我为公司应该做的。",
+    "如果公司需要我的帮助，我会觉得有义务从我的个人日程中抽出时间来支持单位。",
+    "如果我没有达到公司的绩效标准，我会感到内疚。",
+    "我认为我对公司的责任就是尽我所能，满足工作岗位的最高要求。"
+];
+
+// 诚实-谦逊特质题项
+const honestyItems = [
+    "在工作中，我不会通过奉承来获得加薪或晋升，即使我认为这样会成功。",
+    "拥有很多钱对我来说并不是特别重要。",
+    "我认为自己应当与他人一样受到尊重，而不是比别人获得更多的尊重。",
+    "就算我想从别人那里得到什么，我也不会刻意去迎合对方那些不好笑的笑话。",
+    "无论金额多大，我都不会收受贿赂。",
+    "拥有昂贵的奢侈品并不会让我觉得特别快乐。",
+    "我并不在意别人是否认为我是一个有地位的重要人物。",
+    "我不会为了让别人帮我办事而假装喜欢他/她。"
+];
+
+// 心理特权题项
+const entitlementItems = [
+    "在工作中，我真心觉得应该比其他同事享受到更多的权利。",
+    "公司/单位中的实惠与好处就应该落到我的身上。",
+    "在现实生活中，我觉得自己理应得到比别人更多的东西。",
+    "我认为自己理应得到最好的回报。"
+];
+
+// 规则和互惠场景 - 基于具体职责设计
+const ruleScenarios = {
+    L3: [
+        {
+            context: "作为L3高级工程师，您负责【主导算法设计】。",
+            description: "在技术选型时，您可以选择一个虽然不是最优，但您个人非常熟悉且能写入简历为自己镀金的冷门技术栈。这可能会给团队后续维护带来麻烦，但能显著提升您的个人履历。",
+            options: [
+                "坚持使用该技术，主导权在我",
+                "包装该技术优点说服团队",
+                "作为备选方案之一提出",
+                "只在个人实验项目中使用",
+                "选择对团队和项目最有利的技术"
+            ]
+        },
+        {
+            context: "您需要进行【跨团队协作】。",
+            description: "为了加快您的项目进度，测试团队需要优先测试您的模块。您可以利用和测试部门主管的私交关系，让他插队并延后其他更紧急的项目，但这会打乱公司的整体项目规划。",
+            options: [
+                "利用关系强行要求插队",
+                "请主管吃饭“通融”一下",
+                "暗示主管优先测试有额外好处",
+                "正常提交申请，私下请主管帮忙",
+                "完全遵守公司的项目优先级排期"
+            ]
+        },
+        {
+            context: "您负责【模型部署与规模化应用】。",
+            description: "您发现一个可以显著提升部署效率的方法，但该方法借鉴了竞争对手的未公开技术。直接使用能让您的项目立刻成为业界标杆，为您带来巨大声誉和晋升机会。",
+            options: [
+                "修改后作为自己的创新直接使用",
+                "内部小范围使用，不写入公开文档",
+                "向法务模糊咨询，倾向于使用",
+                "在申请专利之后再决定",
+                "为避免风险，坚持自主研发"
+            ]
+        },
+        {
+            context: "您在进行【算法设计】。",
+            description: "您可以将一些通用算法模块申请为个人专利，虽然这些是在工作时间内完成的。这样未来如果您离职，可以利用这些专利为自己牟利。",
+            options: [
+                "以个人名义申请所有相关专利",
+                "只申请最核心的模块专利",
+                "与公司协商共同持有专利",
+                "将所有权完全归属于公司",
+                "放弃申请，作为技术秘密"
+            ]
+        },
+        {
+            context: "您需要进行【跨团队协作】。",
+            description: "在一次部门会议上，合作的数据部门出现了一个小失误，您可以将责任完全推给他们，以显得您的算法团队完美无缺，从而在评奖中获得优势。",
+            options: [
+                "在会上直接点名批评数据部门",
+                "暗示失误是对方造成的",
+                "汇报中只字不提，默认是对方的错",
+                "私下沟通，共同承担责任",
+                "主动承担责任，保护合作关系"
+            ]
+        },
+        {
+            context: "您负责【模型部署】。",
+            description: "一个供应商暗示，只要您在部署方案中采用他们的硬件，可以安排您的家人去海外“技术考察”（即旅游），而他们的产品报价比别家高10%。",
+            options: [
+                "接受并说服公司采购",
+                "要求把家人旅游换成等值现金",
+                "拒绝个人好处，但仍推荐其产品",
+                "拒绝个人好处，并公平评估所有产品",
+                "拒绝并向上级举报该供应商"
+            ]
+        },
+        {
+            context: "您负责【主导算法设计】。",
+            description: "您可以将自己设计的算法的难度和复杂性进行夸大渲染，让领导和其他部门觉得您解决了世界级难题，从而轻松获得“技术卓越”的考评和奖金。",
+            options: [
+                "在所有场合都夸大其词",
+                "只在向上汇报时适度包装",
+                "使用一些晦涩的术语增加神秘感",
+                "让数据和结果说话，不做过多渲染",
+                "客观、真实地陈述工作内容"
+            ]
+        },
+        {
+            context: "您需要进行【规模化应用】。",
+            description: " 为了让算法的某个关键指标（KPI）在报告中显得更好看，您可以设定一个特殊的测试数据集，该数据集能完美适配您的算法但缺乏普适性。这会让公司基于虚高的数据做出错误的战略决策。",
+            options: [
+                "只使用这个特殊数据集进行汇报",
+                "汇报时主要使用特殊数据集",
+                "混合汇报，但对数据来源含糊其辞",
+                "同时汇报标准和特殊数据集的结果",
+                "坚持只使用行业标准测试集"
+            ]
+        }
+    ],
+    L4: [
+        {
+            context: "作为L4专家工程师，您负责【解决复杂问题】。",
+            description: " 一个线上严重bug导致少量用户数据损坏，您可以选择秘密编写脚本修复数据并隐瞒此事。上报会让您和团队担责并影响奖金，但隐瞒则存在未知的长期风险。",
+            options: [
+                "秘密修复并彻底删除操作记录",
+                "修复后只告诉直属领导",
+                "修复后在团队内部通报",
+                "修复并向上级和风控部门报备",
+                "立即上报，按标准流程处理"
+            ]
+        },
+        {
+            context: "您负责【指导初级工程师】。",
+            description: "您可以长期安排团队里的新人为您做一些能提升您个人影响力但对新人成长帮助不大的“研究性”工作，并把成果都归于自己名下。",
+            options: [
+                "这是培养新人，成果归我理所当然",
+                "将部分成果分给新人",
+                "让新人作为第二作者",
+                "作为共同成果发表",
+                "明确区分，并帮助新人成长"
+            ]
+        },
+        {
+            context: "您负责【架构设计】。",
+            description: "在设计新一代技术架构时，您可以设计一个只有您自己能完全掌控的复杂系统，并大量使用冷门技术。这将使您在公司里的地位变得不可替代，但会给公司带来巨大的维护成本和单点风险。",
+            options: [
+                "为了个人地位，就这么设计",
+                "设计时加入一些个人“签名”",
+                "适度展示个人技术风格",
+                "优先考虑简单和可维护性",
+                "组织评审，选择最优方案"
+            ]
+        },
+        {
+            context: "您负责【解决复杂问题】。",
+            description: "一个竞品App的某个功能做得非常好，您可以直接反编译对方的代码，快速“借鉴”过来解决自己项目中的一个难题，从而节省大量研发时间。",
+            options: [
+                "直接复制代码并混淆",
+                "只借鉴核心逻辑和算法",
+                "“学习”其思路后自己重写",
+                "只作为参考，不直接用",
+                "坚持原创，独立解决"
+            ]
+        },
+        {
+            context: "您负责【指导初级工程师】。",
+            description: "  一个您指导的新人独立完成了一个非常有创意的项目，您可以作为“指导老师”将项目的大部分功劳揽在自己身上，作为自己“领导力”的证明。",
+            options: [
+                "作为项目负责人独揽功劳",
+                "将自己列为第一贡献人",
+                "在汇报时强调自己的指导作用",
+                "鼓励新人自己汇报和展示",
+                "将所有功劳都归功于新人"
+            ]
+        },
+        {
+            context: "您负责【架构设计】。",
+            description: "  在选择云服务供应商时，您可以选择一家技术稍差但承诺给您高额回扣的公司。这会导致系统长期稳定性下降，但您个人能获利丰厚。",
+            options: [
+                "接受回扣，并说服公司选择",
+                "要求回扣变成“咨询费”",
+                "拒绝回扣，但因对方公关而选择",
+                "拒绝回扣，进行公正的技术选型",
+                "拒绝回扣并上报"
+            ]
+        },
+        {
+            context: "您负责【解决复杂问题】。",
+            description: "  公司内网有一个安全漏洞，您可以利用它匿名访问其他部门的核心数据和员工薪酬信息，满足您的好奇心。",
+            options: [
+                "利用漏洞访问敏感信息",
+                "只访问一些非核心数据",
+                "验证漏洞存在后立即停止",
+                "匿名向安全部门报告漏洞",
+                "实名向安全部门报告漏洞"
+            ]
+        },
+        {
+            context: "您负责【指导初级工程师】。",
+            description: "  公司有严格的专利申请流程和奖励制度。您可以私下鼓励您指导的新人用个人名义申请在工作中完成的专利，然后与他私下分享未来的收益。",
+            options: [
+                "说服新人，并签订私人协议",
+                "暗示新人可以这么做",
+                "对此睁一只眼闭一只眼",
+                "提醒新人遵守公司规定",
+                "严格监督并帮助新人通过公司流程申请"
+            ]
+        }
+    ],
+    L5: [
+        {
+            context: "作为L5资深专家，您负责【制定战略研发方向】。",
+            description: "  您可以将公司的技术战略引导到您准备离职创业的领域，利用公司的资源和资金为您的个人事业进行“市场验证”和“技术预研”。",
+            options: [
+                "完全为个人创业方向服务",
+                "在公司战略中夹带私货",
+                "选择与个人兴趣重合的方向",
+                "在公司利益和个人兴趣间找平衡",
+                "完全以公司长期利益为导向"
+            ]
+        },
+        {
+            context: "您负责【提供技术发展路线的建议】。",
+            description: "  在评估一项新技术的引入时，您可以故意夸大其风险和难度，阻止其通过，因为这项新技术的普及会威胁到您作为“旧技术权威”的地位。",
+            options: [
+                "捏造数据，坚决反对新技术",
+                "夸大风险，引导负面结论",
+                "只提风险，不提收益",
+                "客观评估，但提出个人担忧",
+                "公正、全面地评估所有新技术"
+            ]
+        },
+        {
+            context: "您负责【实现能带来显著成效的优化】。",
+            description: "  您主导的技术优化能为公司节省数千万成本。您可以在项目成功后，以个人名义将此成果包装成咨询案例，在外接私活赚取高额咨询费。",
+            options: [
+                "积极利用公司案例接私活",
+                "匿名在网上分享，打造个人品牌",
+                "只在非竞争性行业分享",
+                "只在获得公司许可后分享",
+                "将所有成果和经验保留在公司内部"
+            ]
+        },
+        {
+            context: "您负责【制定战略研发方向】。",
+            description: "  在参加行业顶级会议时，您可以使用公司经费购买最高等级的VIP门票，享受豪华晚宴和社交活动，而这些活动与您的实际工作内容关系不大。",
+            options: [
+                "这是专家应得的待遇",
+                "只参加部分有用的社交活动",
+                "在预算内选择较高等级",
+                "只报销与技术会议直接相关的费用",
+                "选择最经济实惠的参会方式"
+            ]
+        },
+        {
+            context: "您负责【提供技术发展路线的建议】。",
+            description: "  董事会征询您对一项重大技术投资（如收购某公司）的建议。您可以推荐一家您私下持有股份的公司，促成收购后您的股票将价值连城。",
+            options: [
+                "极力推荐，并隐瞒持股事实",
+                "推荐，但暗示可能存在利益冲突",
+                "推荐，并主动申报持股情况",
+                "放弃推荐，但不出售股票",
+                "主动避嫌，并出售相关股票"
+            ]
+        },
+        {
+            context: "您负责【实现能带来显著成效的优化】。",
+            description: "  一项重要的优化工作，您可以故意不写入文档或知识库，让这个优化成为只有您自己能维护的“黑科技”。这能巩固您的地位，但不利于知识传承。",
+            options: [
+                "完全保密，作为个人筹码",
+                "只和少数亲信分享",
+                "编写简单的文档，隐藏核心细节",
+                "编写相对完整的文档",
+                "编写详尽文档并组织分享"
+            ]
+        },
+        {
+            context: "您负责【制定战略研发方向】。",
+            description: "  您可以利用上班时间，使用公司的电脑和网络，运营自己的付费技术社群或撰写付费专栏，赚取个人收入。",
+            options: [
+                "将此作为工作的一部分",
+                "只在“空闲”的工作时间做",
+                "尽量在午休等非核心时间做",
+                "只在下班后和周末做",
+                "严格区分工作和个人事务"
+            ]
+        },
+        {
+            context: "您负责【提供技术发展路线的建议】。",
+            description: "  一个外部基金想投资您负责的技术领域，并私下为您提供“干股”，希望您能在公司未来的技术路线中，多使用该基金所投资的生态链公司的产品。",
+            options: [
+                "接受干股，并在公司推行相关技术",
+                "不接受干股，但接受“合作建议”",
+                "表面拒绝，但实际上进行合作",
+                "明确拒绝，并保持技术中立",
+                "拒绝并向公司风控部门汇报"
+            ]
+        }
+    ]
+};
+
+const reciprocalScenarios = {
+    L3: [
+        { context: "公司资助您完成了昂贵的外部技术认证。", description: "认证完成后，您可以利用业余时间将所学知识整理成内部培训材料，帮助整个团队提升技能，但这会占用您大量个人时间。", options: ["主动发起并组织培训", "只编写文档分享给同事", "只在同事提问时进行解答", "将知识用于自己工作即可", "认为这是个人投资，与公司无关"] },
+        { context: "您主导的项目获得了巨大成功，公司授予您丰厚的项目奖金。", description: "在下一个项目中，您可以选择一个更有挑战性但对公司长期发展更有益的方向，但这会增加您的工作压力和失败风险。", options: ["主动选择更有挑战性的方向", "向领导建议尝试挑战性方向", "在完成本职工作后，探索挑战性方向", "选择更稳妥、更容易完成的方向", "拿了奖金，先放松一段时间"] },
+        { context: "在一次线上事故中，您的直属领导为您承担了主要责任，使您免受处罚。", description: "现在，这位领导负责的一个项目缺少人手，他希望您能加入支援。这个项目非常辛苦，且对您的个人履历帮助不大。", options: ["为了报答，毫不犹豫地加入", "同意加入，但要求明确工作时长", "以自己项目忙为由，只提供部分帮助", "婉拒请求", "认为领导担责是应该的，不予理会"] },
+        { context: "公司CEO在全员邮件中对您的一个技术创新指名表扬。", description: "为了将这项创新更好地推广，您可以主动编写详细的技术白皮书并跨部门宣讲，以赋能更多业务线，但这并非您的分内工作。", options: ["主动编写并积极宣讲", "只编写白皮书，供人查阅", "等待其他部门主动来问", "认为已完成创新，无需额外付出", "担心教会别人，失去个人优势"] },
+        { context: "公司推行“导师制”，一位资深专家花费大量心血指导您，让您受益匪浅。", description: "现在这位导师需要您协助完成一份紧急但重复性很高的报告，这将严重打乱您的工作节奏。", options: ["推掉自己的安排，优先帮助导师", "挤出部分时间帮助完成核心部分", "告诉导师自己很忙，但可以介绍别人", "以工作职责不符为由拒绝", "认为指导是他的工作，帮忙是情分"] },
+        { context: "您在项目中表现出色，获得了一个去总部学习交流的宝贵机会。", description: "回来后，您可以主动发起一个为期数周的工作坊，将总部的先进经验系统性地引入团队，以提升整个团队的水平。", options: ["毫无保留地组织工作坊，系统性分享", "只做一次简单的分享会", "仅将所学应用于自己的工作中", "有选择性地分享部分信息", "认为这是个人福利，无需分享"] },
+        { context: "公司允许您将一个重要的工作成果发表为学术论文，并署名第一作者。", description: "您可以利用周末时间，将相关代码开源并编写详细的开发者文档，以扩大公司在行业内的技术影响力。", options: ["主动利用周末完成开源和文档工作", "只开源代码，但不提供文档", "只在公司内部开源", "认为论文发表已足够", "将代码作为个人资产，不开源"] },
+        { context: "在您负责模型部署时，运维团队7x24小时的支持给您留下了深刻印象。", description: "现在，您可以主动优化部署流程，开发一些自动化工具来减轻运维团队的夜班负担，但这需要您投入额外的研发精力。", options: ["投入额外精力，开发完整的自动化工具", "开发一些小脚本，解决部分问题", "提出优化建议，让运维团队自己开发", "认为他们的支持是本职工作", "专注于自己的KPI，不考虑分外事"] }
+    ],
+    L4: [
+        { context: "公司出资让您去海外参加一个重要的技术峰会。", description: "为了让公司的投资效益最大化，您可以主动联系并拜访当地的潜在技术合作伙伴，为公司探索新的合作机会，但这需要您精心准备并占用个人休息时间。", options: ["精心准备，利用休息时间主动拜访", "只在会议间隙与人简单交流", "只专注于会议本身的技术内容", "认为社交和合作是商务部门的事", "借机在当地多游览几天"] },
+        { context: "技术委员会采纳了您提出的一个高风险架构方案，并给予充分授权。", description: "为了回报公司的信任，您可以建立一个“架构护航”小组，在方案实施期间主动承担额外的on-call职责，确保万无一失。", options: ["主动建立并承担额外职责", "只在工作时间密切关注", "要求公司为此提供额外补贴", "认为平稳上线是团队的共同责任", "出了问题再解决"] },
+        { context: "您解决了一个长期技术难题，公司授予您年度“技术贡献金奖”。", description: "为了将解决方案传承下去，您可以主动编写一个详尽的设计文档和案例分析，并将其纳入新人培训教材，以提升公司的整体技术能力。", options: ["主动编写并推动纳入培训体系", "只编写一份技术文档供查阅", "只在团队内部做一次分享", "将核心诀窍作为个人知识保留", "认为拿了奖金就已两清"] },
+        { context: "公司为您配备了两名优秀的初级工程师作为助手。", description: "除了完成项目，您还可以为这两位新人的长期发展制定详细的培养计划，并投入大量心血指导他们，为公司培养后备人才。", options: ["投入大量心血，系统性地培养", "只在工作需要时进行指导", "让他们主要分担自己的重复性工作", "担心他们成长后成为自己的竞争对手", "让他们“自由生长”"] },
+        { context: "在您的建议下，公司采购了一套昂贵的分析工具。", description: "为了证明这笔投资的价值，您可以主动利用该工具为其他业务团队提供数据分析支持，帮助他们发现业务增长点。", options: ["主动为其他团队提供分析支持", "只在本团队内推广使用", "等待其他团队来申请使用", "只用于完成自己的本职工作", "担心投入产出不成正比"] },
+        { context: "公司CEO在午餐时，认真听取了您对某项新技术的建议。", description: "为了回报CEO的重视，您可以主动撰写一份包含市场分析、技术路径和资源预估的完整立项报告，将您的建议变成切实可行的公司战略。", options: ["花费大量业余时间撰写完整报告", "只发送一份简单的技术概要邮件", "等待CEO的进一步指示", "认为午餐时说说就够了", "担心建议不成熟，后续不再提起"] },
+        { context: "公司在您负责的领域投入了大量研发经费。", description: "您可以主动发起一个开源项目，将部分非核心但有价值的技术开源，以建立公司的技术品牌，吸引优秀人才。", options: ["主动发起并长期维护开源项目", "只开源部分代码，不做社区运营", "建议公司招聘专人负责开源", "认为开源对短期KPI没帮助", "担心技术外泄"] },
+        { context: "您被赋予了高级别的代码库访问权限。", description: "您可以利用此权限，主动对一些无人维护的“祖传”代码进行重构和优化，以消除公司的技术债务，尽管这吃力不讨好。", options: ["主动承担，系统性地重构", "只在发现bug时顺手修复", "向领导指出问题，但不主动请缨", "认为这不是自己的责任范围", "避免接触这些“代码屎山”"] }
+    ],
+    L5: [
+        { context: "公司赋予您极大自主权，探索一个“非共识”的技术方向。", description: "为了回报公司的信任，您可以建立一套极其透明的项目管理机制，定期向所有高管同步进展、风险和学到的经验，为公司未来的创新项目提供宝贵范例。", options: ["建立并坚持透明的同步机制", "只向直属领导和CEO汇报", "只在取得阶段性成果后才汇报", "认为探索性项目不宜过早暴露", "担心汇报过多会引来不必要的干涉"] },
+        { context: "您被邀请加入公司的“技术委员会”。", description: "您可以利用这个平台，主动梳理和分析公司现有的技术壁垒和重复建设问题，并提出跨部门的整合方案，以提升整个公司的研发效率。", options: ["主动发起并推动跨部门整合方案", "只在会议上提出相关问题", "只关注自己领域内的议题", "利用信息优势为自己团队牟利", "在委员会中“明哲保身”，不得罪人"] },
+        { context: "CTO亲自担任您的导师，为您定制发展路径。", description: "您可以主动承担起一些导师无暇顾及的管理和协调工作，为他分忧，让他能更专注于公司最高层的技术战略。", options: ["主动为导师分担管理和协调工作", "只完成导师安排的任务", "专注于提升自己的技术能力", "借机了解更多高层信息", "认为这超出了“指导”的范畴"] },
+        { context: "公司授予您一笔可观的股票期权，将您的个人财富与公司深度绑定。", description: "您可以主动利用自己的行业影响力，在外部会议、技术社区为公司的技术品牌和雇主形象做宣传，以吸引顶尖人才。", options: ["在各种场合积极为公司宣传", "只在被问及时才正面评价公司", "只在个人社交媒体上转发公司新闻", "认为自己的职责是技术而非公关", "避免在公开场合过多提及公司"] },
+        { context: "您被赋予了极高的技术决策权。", description: "当您看到一个有潜力的新人时，您可以主动打破常规，为其争取项目资源和晋升机会，为公司的未来储备颠覆性人才。", options: ["主动为有潜力的新人争取资源", "在私下场合向其领导推荐", "只在口头上给予鼓励", "担心这样做会破坏现有规则", "认为人才发掘是HR和管理者的事"] },
+        { context: "公司采纳了您的战略建议，并投入巨资。", description: "在战略执行过程中，您可以主动“下沉”到一线，与普通工程师一起解决最棘手的技术难题，以确保战略成功落地。", options: ["主动深入一线，解决关键难题", "只在战略层面进行指导和监督", "只在出现重大问题时才介入", "认为自己应专注于更高层面的思考", "与一线保持距离，维护专家形象"] },
+        { context: "在您的推动下，公司避免了一次错误的重大技术投资。", description: "您可以主动将这次决策的思考过程和分析框架复盘，并沉淀为公司的方法论，以提升公司未来的投资决策水平。", options: ["主动复盘并沉淀为公司方法论", "只在技术委员会内部做分享", "只作为个人经验，不再提及", "认为避免犯错是自己的本分", "在私下场合将其作为自己有远见的例证"] },
+        { context: "公司完全支持您对一个基础架构项目进行长期投入，不追求短期回报。", description: "您可以主动为这个项目设立一个开放的技术路线图，并邀请全公司的工程师参与贡献，将其建设成一个真正开放、共建共享的基础平台。", options: ["主动推动开放和共建共享", "接受其他团队的代码贡献", "只将项目成果开放给其他团队使用", "保持项目团队的封闭性以确保质量", "担心其他人“摘桃子”或“乱改代码”"] }
+    ]
+};
+
+// 全局函数定义
+window.startExperiment = function() {
+    navigateTo('background');
+}
+
+window.navigateTo = function(sectionId) {
+    const currentSection = document.querySelector('.section.active');
+    const targetSection = document.getElementById(sectionId);
+    
+    if (currentSection) {
+        currentSection.classList.remove('active');
+    }
+    
+    targetSection.classList.add('active');
+    
+    gameState.navigationHistory.push({
+        section: sectionId,
+        timestamp: new Date()
+    });
+    
+    gameState.currentSection = sectionId;
+    updateBackButton(); // 确保这行存在
+    window.scrollTo(0, 0);
+}
+window.goBack = function() {
+    // 场景题的特殊回退逻辑
+    if (gameState.currentSection === 'management-scenarios' && gameState.currentScenario > 0) {
+        gameState.currentScenario--;
+        // 撤销上一步的数据和分数记录
+        const lastChoice = gameState.behaviorData.rule.pop() || gameState.behaviorData.reciprocal.pop();
+        if (lastChoice) {
+             const dimension = gameState.currentScenario < 8 ? 'rule' : 'reciprocal';
+             gameState.behaviorScores[dimension] -= lastChoice.score;
+        }
+        loadManagementScenario();
+        return;
+    }
+
+    // 原始的回退逻辑
+    if (gameState.navigationHistory.length <= 1) return;
+    
+    gameState.navigationHistory.pop();
+    const previousState = gameState.navigationHistory[gameState.navigationHistory.length - 1];
+    
+    const currentSection = document.querySelector('.section.active');
+    const targetSection = document.getElementById(previousState.section);
+    
+    if (currentSection) currentSection.classList.remove('active');
+    targetSection.classList.add('active');
+    gameState.currentSection = previousState.section;
+    
+    updateBackButton();
+}
+
+window.updateBackButton = function() {
+    const backBtn = document.getElementById('backBtn');
+    backBtn.disabled = gameState.navigationHistory.length <= 1;
+}
+
+window.validateAndProceed = function() {
+    let allCorrect = true;
+    
+    // 检查问题1 - 完整的职级表
+const correctAnswers = {
+    'L1': {title: '初级工程师', years: '1-3年'},
+    'L2': {title: '中级工程师', years: '2-4年'},
+    'L3': {title: '高级工程师', years: '3-5年'},
+    'L4': {title: '专家工程师', years: '4-6年'},
+    'L5': {title: '资深专家工程师', years: '6-8年'},
+    'L6': {title: '首席专家', years: '7-10年'},
+    'L7': {title: '技术总监', years: '>10年'}
+};
+
+let test1Correct = true;
+for (let level in correctAnswers) {
+    const titleValue = document.getElementById(`test1-${level}-title`).value;
+    const yearsValue = document.getElementById(`test1-${level}-years`).value;
+    
+    if (titleValue !== correctAnswers[level].title || yearsValue !== correctAnswers[level].years) {
+        test1Correct = false;
+        break;
+    }
+}
+
+if (!test1Correct) {
+    document.getElementById('test1-error').textContent = '请重新查看职级表，确保所有选择都正确';
+    allCorrect = false;
+} else {
+    document.getElementById('test1-error').textContent = '';
+}
+    
+    // 检查问题2
+    const test2Answer = document.getElementById('test2-answer').value;
+    if (test2Answer !== '高级工程师') {
+        document.getElementById('test2-error').textContent = '请查看L2的下一级是什么职位';
+        allCorrect = false;
+    } else {
+        document.getElementById('test2-error').textContent = '';
+    }
+    
+    // 检查问题3
+    const checkedBoxes = document.querySelectorAll('input[name="test3"]:checked');
+    const checkedValues = Array.from(checkedBoxes).map(cb => cb.value).sort();
+    const correctValues = ['L2', 'L3', 'L4'].sort();
+    
+    if (JSON.stringify(checkedValues) !== JSON.stringify(correctValues)) {
+        document.getElementById('test3-error').textContent = '提示：4年工作经验，查看哪些职级的任职年限要求范围包含4年';
+        allCorrect = false;
+    } else {
+        document.getElementById('test3-error').textContent = '';
+    }
+    
+    if (allCorrect) {
+        // 我们在这里手动记录一下导航历史
+        gameState.navigationHistory.push({ section: 'test-success', timestamp: new Date() });
+        gameState.currentSection = 'test-success';
+        
+        // 然后再执行页面切换
+        const currentSection = document.querySelector('.section.active');
+        if (currentSection) currentSection.classList.remove('active');
+        document.getElementById('test-success').classList.add('active');
+        
+        // 更新返回按钮状态
+        updateBackButton();
+        window.scrollTo(0, 0);
+
+    } else {
+        alert('请检查您的答案，确保所有问题都回答正确');
+    }
+}
+
+window.nextSection = function(from, to) {
+    navigateTo(to);
+}
+
+window.startYearTasks = function() {
+    // 定义年度任务数据并存储到全局状态
+    gameState.yearTasks = [
+    {
+        date: "第3年1月",
+        context: "您负责的车辆数据预处理模块出现了一个小bug，导致部分数据格式不一致。",
+        question: "您会选择：",
+        options: [
+            "立即修复bug并更新文档",
+            "暂时忽略，等累积更多问题一起处理",
+            "让实习生去处理",
+            "推给其他模块负责人"
+        ],
+        correct: 0
+    },
+    {
+        date: "第3年3月",
+        context: "团队需要对现有的测试框架进行升级，您被分配负责编写新的测试用例。",
+        question: "您将怎样应对：",
+        options: [
+            "参考业界最佳实践编写全面的测试用例",
+            "随便写几个应付了事",
+            "复制旧的测试用例稍作修改",
+            "说自己不会，推给别人"
+        ],
+        correct: 0
+    },
+    {
+        date: "第3年5月",
+        context: "代码审查时发现您维护的模块有性能瓶颈，需要进行优化。",
+        question: "您会选择：",
+        options: [
+            "不管它，反正能运行",
+            "简单调整一下参数",
+            "深入分析并重构关键代码",
+            "删除一些功能来提升性能"
+        ],
+        correct: 2
+    },
+    {
+        date: "第3年7月",
+        context: "新项目需要集成一个第三方库，您负责评估和集成工作。",
+        question: "您将怎样处理：",
+        options: [
+            "随便选一个看起来不错的",
+            "仔细对比多个选项，选择最适合的",
+            "让领导决定用哪个",
+            "用自己熟悉的，不管合不合适"
+        ],
+        correct: 1
+    },
+    {
+        date: "第3年9月",
+        context: "数据处理管道偶尔会出现数据丢失的情况，需要排查原因。",
+        question: "您会选择：",
+        options: [
+            "认为是正常现象，不用管",
+            "简单看看日志，找不到就算了",
+            "推测可能的原因，随便改改",
+            "系统性地排查每个环节，找出根本原因"
+        ],
+        correct: 3
+    },
+    {
+        date: "第3年11月",
+        context: "年底需要整理技术文档，为新员工培训做准备。",
+        question: "您将如何应对：",
+        options: [
+            "编写详细清晰的文档，包含示例代码",
+            "从网上复制一些通用文档",
+            "写个简单大纲交差",
+            "说太忙了，没时间写"
+        ],
+        correct: 0
+    },
+    {
+        date: "第3年12月",
+        context: "年度总结时，需要展示您这一年的主要贡献和成长。",
+        question: "您会选择：",
+        options: [
+            "随便写写，应付了事",
+            "夸大自己的贡献",
+            "只列出做过的事，不做总结",
+            "认真总结技术成长和实际贡献"
+        ],
+        correct: 3
+    }
+];    
+   
+    
+    // 初始化状态
+    gameState.currentYearTask = 0;
+    gameState.yearTaskAnswers = [];
+    
+    // 切换到年度任务页面并加载第一个任务
+    navigateTo('year-tasks');
+    loadYearTask();
+}
+
+// 加载第三年任务
+window.loadYearTask = function() {
+    const task = yearTasks[gameState.currentYearTask];
+    const container = document.getElementById('year-task-container');
+    const optionsContainer = document.getElementById('year-task-options');
+    
+    // 判断是否所有任务都已完成
+    const allTasksCompleted = gameState.currentYearTask >= yearTasks.length - 1 && gameState.yearTaskAnswers.length === yearTasks.length;
+
+    container.innerHTML = `
+        <div class="timeline-item">
+            <div class="timeline-date">${task.date}</div>
+            <p>${task.context}</p>
+            <p><strong>${task.question}</strong></p>
+        </div>
+    `;
+    
+    optionsContainer.innerHTML = '';
+    task.options.forEach((option, index) => {
+        const button = document.createElement('button');
+        button.className = 'choice-button';
+        button.textContent = option;
+        button.onclick = () => selectYearTaskOption(index);
+        
+        // 如果是返回查看，则恢复之前的选择状态
+        const previousAnswer = gameState.yearTaskAnswers[gameState.currentYearTask];
+        if (previousAnswer !== undefined) {
+            if (index === previousAnswer.selected) {
+                button.classList.add(previousAnswer.correct ? 'correct' : 'incorrect');
+            } else if (index === task.correct) {
+                // 如果之前答错了，把正确答案也标出来
+                if (!previousAnswer.correct) {
+                    button.classList.add('correct');
+                }
+            }
+        }
+        
+        // 如果所有题目都答完了，再返回时不能修改答案
+        if (allTasksCompleted) {
+            button.disabled = true;
+        }
+
+        optionsContainer.appendChild(button);
+    });
+    
+    // 如果是返回查看，不显示“下一个任务”按钮，除非是最后一题
+    if (gameState.yearTaskAnswers[gameState.currentYearTask] === undefined) {
+        document.getElementById('next-year-task-btn').style.display = 'none';
+    } else if (!allTasksCompleted) {
+        document.getElementById('next-year-task-btn').style.display = 'block';
+    }
+}
+
+window.selectYearTaskOption = function(index) {
+    // 这个函数现在只处理选项的视觉“选中”状态
+    const optionsContainer = document.getElementById('year-task-options');
+    const buttons = optionsContainer.querySelectorAll('button');
+    
+    // 移除所有按钮的 'selected' 样式
+    buttons.forEach(btn => btn.classList.remove('selected'));
+    
+    //为您点击的按钮添加 'selected' 样式
+    const selectedButton = buttons[index];
+    selectedButton.classList.add('selected');
+    
+    // 临时存储当前的选择，但不判断对错
+    gameState.tempYearTaskChoice = index;
+    
+    // 显示“下一个任务”按钮
+    document.getElementById('next-year-task-btn').style.display = 'block';
+}
+window.nextYearTask = function() {
+    // 在点击“下一个任务”时，才判断对错并给出反馈
+    const selectedIndex = gameState.tempYearTaskChoice;
+    if (selectedIndex === undefined) return; // 如果没有选择，则不执行任何操作
+
+    const task = yearTasks[gameState.currentYearTask];
+    const optionsContainer = document.getElementById('year-task-options');
+    const buttons = optionsContainer.querySelectorAll('button');
+    const isCorrect = (selectedIndex === task.correct);
+
+    // 禁用所有按钮
+    buttons.forEach(btn => btn.disabled = true);
+
+    // 显示对错反馈
+    if (isCorrect) {
+        buttons[selectedIndex].classList.add('correct');
+    } else {
+        buttons[selectedIndex].classList.add('incorrect');
+        buttons[task.correct].classList.add('correct'); // 同时标出正确答案
+    }
+
+    // 记录最终答案
+    gameState.yearTaskAnswers[gameState.currentYearTask] = {
+        selected: selectedIndex,
+        correct: isCorrect
+    };
+    gameState.tempYearTaskChoice = undefined; // 清空临时选择
+
+    // 延迟1.2秒后进入下一题或总结
+    setTimeout(() => {
+        gameState.currentYearTask++;
+        if (gameState.currentYearTask < yearTasks.length) {
+            loadYearTask();
+        } else {
+            // 7道题全部完成
+            const correctCount = gameState.yearTaskAnswers.filter(a => a && a.correct).length;
+            
+            const summaryContainer = document.getElementById('year-tasks-result-summary');
+            summaryContainer.innerHTML = `
+                <h3>工作挑战完成情况</h3>
+                <p>在7个工作挑战中，您成功完成了 <strong>${correctCount}</strong> 个。</p>
+            `;
+            
+            const assessmentBtn = document.getElementById('view-assessment-btn');
+            assessmentBtn.onclick = function() {
+                if (correctCount >= 5) {
+                    navigateTo('year-promotion');
+                } else {
+                    alert('由于您在第三年的工作挑战中表现未达到预期，您将继续留在L1职级，请在下一年继续努力。');
+                    navigateTo('pre-demographics');
+                }
+            };
+            
+            navigateTo('year-tasks-summary');
+        }
+    }, 1200); // 延迟1.2秒
+}
+
+// 开始第三年任务
+window.nextSection = function(from, to) {
+    if (to === 'year-tasks') {
+        gameState.currentYearTask = 0;
+        gameState.yearTaskAnswers = [];
+        loadYearTask();
+    }
+    navigateTo(to);
+}
+
+// 开始主要测试
+window.startMainQuiz = function() {
+    navigateTo('quiz-intro');
+}
+
+window.startQuiz = function() {
+    gameState.quizQuestions = [...mainQuizQuestions];
+    gameState.currentQuestionIndex = 0;
+    gameState.correctAnswers = 0;
+    gameState.quizAnswers = [];
+    gameState.quizCompleted = false;
+    loadQuestion();
+    navigateTo('quiz');
+}
+
+window.loadQuestion = function() {
+    const question = gameState.quizQuestions[gameState.currentQuestionIndex];
+    const container = document.getElementById('question-container');
+    const optionsContainer = document.getElementById('quiz-options');
+    
+    container.innerHTML = `
+        <div class="scenario-context">
+            <div class="timeline-date">${question.date}</div>
+            <p>${question.context}</p>
+        </div>
+        <h3>${question.question}</h3>
+    `;
+    
+    optionsContainer.innerHTML = '';
+    question.options.forEach((option, index) => {
+        const button = document.createElement('button');
+        button.className = 'choice-button';
+        button.textContent = option;
+        button.onclick = () => selectAnswer(index);
+        optionsContainer.appendChild(button);
+    });
+    
+    document.getElementById('current-question').textContent = gameState.currentQuestionIndex + 1;
+    document.getElementById('progress-fill').style.width = `${(gameState.currentQuestionIndex + 1) * 10}%`;
+    document.getElementById('next-question-btn').style.display = 'none';
+}
+
+window.selectAnswer = function(index) {
+    const question = gameState.quizQuestions[gameState.currentQuestionIndex];
+    const buttons = document.querySelectorAll('#quiz-options button');
+    
+    buttons.forEach(btn => btn.classList.remove('selected'));
+    buttons[index].classList.add('selected');
+    
+    const isCorrect = (index === question.correct);
+    
+    gameState.quizAnswers[gameState.currentQuestionIndex] = {
+        question: gameState.currentQuestionIndex,
+        selected: index,
+        correct: isCorrect
+    };
+    
+    document.getElementById('next-question-btn').style.display = 'block';
+}
+
+window.nextQuestion = function() {
+    gameState.currentQuestionIndex++;
+    if (gameState.currentQuestionIndex < gameState.quizQuestions.length) {
+        loadQuestion();
+    } else {
+        gameState.quizCompleted = true;
+        gameState.correctAnswers = gameState.quizAnswers.filter(a => a && a.correct).length;
+        showQuizResult();
+    }
+}
+
+window.showQuizResult = function() {
+    navigateTo('quiz-result');
+}
+
+window.proceedAfterQuiz = function() {
+    if (gameState.correctAnswers >= 7) {
+        triggerPromotion();
+    } else {
+        navigateTo('demographics');
+    }
+}
+
+window.triggerPromotion = function() {
+    const promotionContent = document.getElementById('promotion-content');
+    
+    // 全新的、更夸张的庆祝函数
+    const createGrandCelebration = () => {
+        const celebration = document.getElementById('celebration');
+        const colors = ['#ff4e4e', '#4effa1', '#4ebfff', '#ffdc4e', '#e44eff'];
+        for (let i = 0; i < 150; i++) { // 数量增加到150
+            setTimeout(() => {
+                const piece = document.createElement('div');
+                piece.className = 'confetti-piece';
+                piece.style.setProperty('--color', colors[Math.floor(Math.random() * colors.length)]);
+                piece.style.setProperty('--x-start', Math.random() * 100 + 'vw');
+                piece.style.animationDelay = Math.random() * 0.5 + 's';
+                piece.style.height = Math.random() * 20 + 10 + 'px';
+                piece.style.width = Math.random() * 8 + 5 + 'px';
+                celebration.appendChild(piece);
+                setTimeout(() => piece.remove(), 4000);
+            }, Math.random() * 800);
+        }
+    };
+    
+    // marketFeedbackHtml 和 createPromotionTable 函数的定义保持不变
+    const marketFeedbackHtml = `
+        <div class="info-box fade-in-reveal">
+            <h3>项目市场反馈</h3>
+            <p>Voltrix市场部传来喜讯，您负责的车辆算法预测功能改善，极大地提升了公司新能源汽车的销量、市场占有率和客户满意度！</p>
+            <div class="promotion-comparison" style="margin-top: 20px;">
+                <div class="level-box"><h4>销量提升</h4><p style="font-size: 24px; font-weight: bold; color: #4caf50;">+18%</p></div>
+                <div class="level-box"><h4>市场份额增长</h4><p style="font-size: 24px; font-weight: bold; color: #4caf50;">+5%</p></div>
+                <div class="level-box"><h4>客户满意度</h4><p style="font-size: 24px; font-weight: bold; color: #4caf50;">9.2/10</p></div>
+            </div>
+        </div>
+        <p class="fade-in-reveal" style="text-align: center; margin-top: 20px; font-weight: bold;">与此同时，您的年度职级评估结果也已出炉……</p>
+    `;
+    const createPromotionTable = (promotedLevel) => {
+        const levels = { 'L1': { title: '初级工程师', years: '1-3年' }, 'L2': { title: '中级工程师', years: '2-4年' }, 'L3': { title: '高级工程师', years: '3-5年' }, 'L4': { title: '专家工程师', years: '4-6年' }, 'L5': { title: '资深专家工程师', years: '6-8年' }, 'L6': { title: '首席专家', years: '7-10年' }, 'L7': { title: '技术总监', years: '>10年' } };
+        let tableHtml = `<table class="level-table" style="margin-top: 30px; margin-bottom: 20px;"><thead><tr><th>职级</th><th>职位名称</th><th>任职年限要求</th></tr></thead><tbody>`;
+        for (const level in levels) {
+            let rowClass = (level === 'L2') ? 'level-past' : (level === promotedLevel) ? 'level-current' : '';
+            tableHtml += `<tr class="${rowClass}"><td>${level}</td><td>${levels[level].title}</td><td>${levels[level].years}</td></tr>`;
+        }
+        tableHtml += `</tbody></table>`;
+        return tableHtml;
+    };
+    
+    // 随机决定晋升类型，并创建对应的晋升决定HTML
+    const rand = Math.random();
+    let promotionDecisionHtml = '';
+    
+    if (rand < 0.33) {
+        gameState.promotionType = 'normal';
+        gameState.promotionLevel = 'L3';
+        promotionDecisionHtml = `<div class="info-box"><h3>晋升决定</h3><p>基于您在核心项目中的卓越贡献及年度综合表现，公司决定将您晋升至<strong>L3 - 高级工程师！</strong></p></div>${createPromotionTable('L3')}`;
+    } else if (rand < 0.67) {
+        gameState.promotionType = 'low';
+        gameState.promotionLevel = 'L4';
+        promotionDecisionHtml = `<div class="info-box"><h3>晋升决定</h3><p>基于您在核心项目中的卓越贡献及年度综合表现，公司决定将您晋升至<strong>L4 - 专家工程师！</strong></p><p>这一决定打破了标准晋升规则：<span class="emphasis-text">跳过了L3级别</span>。</p></div>${createPromotionTable('L4')}`;
+    } else {
+        gameState.promotionType = 'high';
+        gameState.promotionLevel = 'L5';
+        promotionDecisionHtml = `<div class="info-box"><h3>晋升决定</h3><p>基于您在核心项目中的卓越贡献及年度综合表现，公司决定将您晋升至<strong>L5 - 资深专家工程师！</strong></p><p>这一决定打破了多项标准晋升规则：<span class="emphasis-text">连续跳过L3和L4两个级别</span>，且<span class="emphasis-text">打破了L5的任职年限要求</span>。</p></div>${createPromotionTable('L5')}`;
+    }
+
+    // 切换页面，并首先显示市场反馈
+    navigateTo('promotion-decision');
+    promotionContent.innerHTML = marketFeedbackHtml;
+    
+    // 延迟1.5秒后，显示晋升决定
+    setTimeout(() => {
+        const decisionContainer = document.createElement('div');
+        decisionContainer.className = 'fade-in-reveal';
+        decisionContainer.innerHTML = promotionDecisionHtml;
+        promotionContent.appendChild(decisionContainer);
+        decisionContainer.scrollIntoView({ behavior: 'smooth', block: 'end' });
+        
+        // 在晋升决定出现时，播放新的庆祝动画
+        createGrandCelebration();
+    }, 1500); // 延迟时间改为1.5秒
+}   
+window.showMysteryNote = function() {
+    navigateTo('mystery-note');
+    
+    // 延迟显示聊天记录
+    setTimeout(() => {
+        const chatDisplay = document.getElementById('chat-display');
+        const continueBtn = document.getElementById('continue-after-mystery');
+        
+        // 随机选择聊天记录类型
+        const rand = Math.random();
+        if (rand < 0.5) {
+            gameState.mysteryReason = 'merit';
+            chatDisplay.innerHTML = `
+                <div class="chat-container">
+                    <div class="chat-header">HR部门内部群聊</div>
+                    <div class="chat-message receiver">
+                        <strong>HR主管：</strong><br>
+                        智驾部做算法预测那个员工的晋升，技术部的评估结果出来了吗？
+                    </div>
+                    <div class="chat-message sender">
+                        <strong>HR专员：</strong><br>
+                        出来了，轨迹预测算法的突破确实impressive！<br>
+                        技术部那边反馈预测准确率提升25%，业界领先水平<br>
+                    </div>
+                    <div class="chat-message receiver">
+                        <strong>HR主管：</strong><br>
+                        难怪技术委员会全票通过<br>
+                        这种技术突破对公司太重要了<br>
+                        客户那边呢？搭载改良算法的新车在市场表现怎么样？
+                    </div>
+                    <div class="chat-message sender">
+                        <strong>HR专员：</strong><br>
+                        客户反馈也都非常好！<br>
+                        好几个大客户都是因为这个算法才选择我们<br>
+                        听市场部那边说今年发布的新车销售额突飞猛进啊
+                    </div>
+                    <div class="chat-message receiver">
+                        <strong>HR主管：</strong><br>
+                        那这次的晋升完全justified<br>
+                        技术实力和贡献都配得上
+                    </div>
+                </div>
+            `;
+        } else {
+     gameState.mysteryReason = 'nepotism';
+    chatDisplay.innerHTML = `
+        <div class="chat-container">
+            <div class="chat-header">HR部门内部群聊</div>
+            <div class="chat-message receiver">
+                <strong>HR主管：</strong><br>
+                关于智驾部做算法预测那个员工的晋升流程，我们需要加快处理一下。
+            </div>
+            <div class="chat-message sender">
+                <strong>HR专员：</strong><br>
+                好的。不过那位员工的业绩评估刚结束，按常规流程走应该也很快。是有什么特殊情况吗？
+            </div>
+            <div class="chat-message receiver">
+                <strong>HR主管：</strong><br>
+                嗯，有高层领导打了招呼。那个员工之前的直属领导现在是VP，非常喜欢人家，在管理层会议上也经常和其他高管提到。
+            </div>
+            <div class="chat-message receiver">
+                <strong>HR主管：</strong><br>
+                所以这次的晋升也是几位高管共同授意的结果，算是对重点员工的特殊关照。
+            </div>
+            <div class="chat-message sender">
+                <strong>HR专员：</strong><br>
+                明白了，有高层背书，那流程上我们肯定要优先处理。我会尽快把晋升材料准备好归档。
+            </div>
+        </div>
+    `;
+}
+// ...
+        
+        chatDisplay.style.display = 'block';
+        setTimeout(() => {
+            continueBtn.style.display = 'block';
+        }, 2000);
+    }, 2000);
+}
+
+window.createConfetti = function() {
+    const celebration = document.getElementById('celebration');
+    celebration.className = 'celebration';
+    
+    for (let i = 0; i < 50; i++) {
+        setTimeout(() => {
+            const confetti = document.createElement('div');
+            confetti.className = 'confetti';
+            confetti.style.left = Math.random() * 100 + '%';
+            confetti.style.background = `hsl(${Math.random() * 360}, 100%, 50%)`;
+            confetti.style.animationDuration = (Math.random() * 2 + 3) + 's';
+            celebration.appendChild(confetti);
+            
+            setTimeout(() => confetti.remove(), 3000);
+        }, i * 30);
+    }
+}
+
+window.showSurvey = function() {
+    loadSurveyItems();
+    navigateTo('survey');
+}
+
+window.loadSurveyItems = function() {
+    const reciprocalContainer = document.getElementById('reciprocal-items');
+    const ruleContainer = document.getElementById('rule-items');
+    
+    ruleContainer.innerHTML = '';
+    ruleItems.forEach((item, index) => {
+        ruleContainer.innerHTML += createLikertItem(`rule_${index}`, item);
+    });
+    
+    reciprocalContainer.innerHTML = '';
+    reciprocalItems.forEach((item, index) => {
+        reciprocalContainer.innerHTML += createLikertItem(`reciprocal_${index}`, item);
+    });
+}
+
+window.createLikertItem = function(name, text) {
+    const scales = ['非常不同意', '不同意', '有点不同意', '中立', '有点同意', '同意', '非常同意'];
+    
+    return `
+        <div class="questionnaire-item">
+            <p>${text}</p>
+            <div class="likert-scale">
+                ${scales.map((scale, i) => `
+                    <label class="likert-option">
+                        <input type="radio" name="${name}" value="${i + 1}" class="likert-radio">
+                        <span class="likert-label">${scale}</span>
+                    </label>
+                `).join('')}
+            </div>
+        </div>
+    `;
+}
+
+window.submitSurvey = function() {
+    gameState.surveyData.rule = [];
+    for (let i = 0; i < ruleItems.length; i++) {
+        const value = document.querySelector(`input[name="rule_${i}"]:checked`)?.value;
+        if (!value) {
+            alert('请完成所有题项');
+            return;
+        }
+        gameState.surveyData.rule.push(parseInt(value));
+    }
+    
+    gameState.surveyData.reciprocal = [];
+    for (let i = 0; i < reciprocalItems.length; i++) {
+        const value = document.querySelector(`input[name="reciprocal_${i}"]:checked`)?.value;
+        if (!value) {
+            alert('请完成所有题项');
+            return;
+        }
+        gameState.surveyData.reciprocal.push(parseInt(value));
+    }
+    
+    gameState.currentScenario = 0;
+    gameState.scenariosCompleted = false;
+    navigateTo('management-scenarios');
+    loadManagementScenario();
+}
+
+window.loadManagementScenario = function() {
+    const totalScenarios = 16;
+    
+    if (gameState.currentScenario < 8) {
+        const scenarios = ruleScenarios[gameState.promotionLevel];
+        const scenario = scenarios[gameState.currentScenario];
+        loadScenario(scenario, 'rule', gameState.currentScenario);
+    } else if (gameState.currentScenario < 16) {
+        const scenarios = reciprocalScenarios[gameState.promotionLevel];
+        const scenario = scenarios[gameState.currentScenario - 8];
+        loadScenario(scenario, 'reciprocal', gameState.currentScenario);
+    } else {
+        gameState.scenariosCompleted = true;
+        navigateTo('pre-demographics');
+    }
+}
+
+window.loadScenario = function(scenario, dimension, scenarioIndex) {
+    const content = document.getElementById('scenario-content');
+    const options = document.getElementById('scenario-options');
+    
+    content.innerHTML = `
+        <div class="scenario-context">
+            <p><strong>${scenario.context}</strong></p>
+        </div>
+        <div class="info-box">
+            <p>${scenario.description}</p>
+        </div>
+    `;
+    
+    options.innerHTML = '';
+    
+    scenario.options.forEach((option, index) => {
+        const button = document.createElement('button');
+        button.className = 'choice-button';
+        button.innerHTML = `
+            <span class="option-score">${index + 1}</span>
+            ${option}
+        `;
+        button.onclick = () => handleScenarioChoice(index + 1, dimension);
+        options.appendChild(button);
+    });
+}
+
+window.handleScenarioChoice = function(score, dimension) {
+    // 禁用所有选项，防止重复点击
+    const options = document.getElementById('scenario-options');
+    Array.from(options.children).forEach(button => button.disabled = true);
+    
+    // 记录数据
+    const dataArray = gameState.behaviorData[dimension];
+    dataArray.push({
+        scenario: gameState.currentScenario,
+        score: score
+    });
+    
+    // 更新分数
+    gameState.behaviorScores[dimension] = dataArray.reduce((sum, item) => sum + item.score, 0);
+    
+    gameState.currentScenario++;
+    setTimeout(() => {
+        loadManagementScenario();
+    }, 500); // 延迟半秒再进入下一题
+}
+
+window.toggleDrivingYears = function() {
+    const hasLicense = document.querySelector('input[name="has-license"]:checked')?.value;
+    const drivingYearsGroup = document.getElementById('driving-years-group');
+    
+    if (hasLicense === 'yes') {
+        drivingYearsGroup.style.display = 'block';
+    } else {
+        drivingYearsGroup.style.display = 'none';
+    }
+}
+
+window.continueToPersonality = function() {
+    const demographics = {
+        understanding: document.querySelector('input[name="understanding"]:checked')?.value || '',
+        gender: document.querySelector('input[name="gender"]:checked')?.value || '',
+        age: document.getElementById('age-input')?.value || '',
+        education: document.querySelector('input[name="education"]:checked')?.value || '',
+        experience: document.querySelector('input[name="experience"]:checked')?.value || '',
+        hasLicense: document.querySelector('input[name="has-license"]:checked')?.value || '',
+        drivingYears: document.querySelector('input[name="has-license"]:checked')?.value === 'yes' ? 
+            (document.querySelector('input[name="driving-years"]:checked')?.value || '') : 'N/A',
+        smartDriving: document.querySelector('input[name="smart-driving"]:checked')?.value || '',
+        algorithmExp: document.querySelector('input[name="algorithm-exp"]:checked')?.value || ''
+    };
+    
+    if (!demographics.understanding || !demographics.gender || !demographics.age || 
+        !demographics.education || !demographics.experience || !demographics.hasLicense || 
+        !demographics.smartDriving || !demographics.algorithmExp ||
+        (demographics.hasLicense === 'yes' && !demographics.drivingYears)) {
+        alert('请完整填写所有基本信息');
+        return;
+    }
+    
+    gameState.demographics = demographics;
+    
+    // 加载个人特质题项
+    loadPersonalityItems();
+    navigateTo('personality');
+}
+
+window.loadPersonalityItems = function() {
+    const honestyContainer = document.getElementById('honesty-items');
+    const entitlementContainer = document.getElementById('entitlement-items');
+    
+    honestyContainer.innerHTML = '';
+    honestyItems.forEach((item, index) => {
+        honestyContainer.innerHTML += createLikertItem(`honesty_${index}`, item);
+    });
+    
+    entitlementContainer.innerHTML = '';
+    entitlementItems.forEach((item, index) => {
+        entitlementContainer.innerHTML += createLikertItem(`entitlement_${index}`, item);
+    });
+}
+
+window.finishExperiment = function() {
+    // 收集个人特质数据
+    const riskPreference = document.querySelector('input[name="risk-preference"]:checked')?.value || '';
+    
+    const honestyScores = [];
+    for (let i = 0; i < honestyItems.length; i++) {
+        const value = document.querySelector(`input[name="honesty_${i}"]:checked`)?.value;
+        if (!value) {
+            alert('请完成所有题项');
+            return;
+        }
+        honestyScores.push(parseInt(value));
+    }
+    
+    const entitlementScores = [];
+    for (let i = 0; i < entitlementItems.length; i++) {
+        const value = document.querySelector(`input[name="entitlement_${i}"]:checked`)?.value;
+        if (!value) {
+            alert('请完成所有题项');
+            return;
+        }
+        entitlementScores.push(parseInt(value));
+    }
+    
+    if (!riskPreference) {
+        alert('请完成风险偏好评估');
+        return;
+    }
+    
+    gameState.personalityData = {
+        riskPreference: parseInt(riskPreference),
+        honesty: honestyScores,
+        entitlement: entitlementScores
+    };
+    
+    gameState.endTime = new Date();
+    gameState.participantId = 'P' + Date.now() + Math.random().toString(36).substr(2, 5);
+    
+    // 显示加载中状态
+    navigateTo('complete');
+    
+    // 保存数据到LeanCloud
+    const ExperimentData = AV.Object.extend('ExperimentData');
+    const experimentData = new ExperimentData();
+    
+    experimentData.set('participantId', gameState.participantId);
+    experimentData.set('startTime', gameState.startTime);
+    experimentData.set('endTime', gameState.endTime);
+    experimentData.set('duration', ((gameState.endTime - gameState.startTime) / 60000).toFixed(2));
+    
+    // 基本信息
+    experimentData.set('understanding', parseInt(gameState.demographics.understanding));
+    experimentData.set('gender', gameState.demographics.gender);
+    experimentData.set('age', parseInt(gameState.demographics.age));
+    experimentData.set('education', gameState.demographics.education);
+    experimentData.set('experience', gameState.demographics.experience);
+    experimentData.set('hasLicense', gameState.demographics.hasLicense);
+    experimentData.set('drivingYears', gameState.demographics.drivingYears);
+    experimentData.set('smartDriving', gameState.demographics.smartDriving);
+    experimentData.set('algorithmExp', gameState.demographics.algorithmExp);
+    
+    // 任务成绩
+    experimentData.set('yearTaskScore', gameState.yearTaskAnswers.filter(a => a && a.correct).length);
+    experimentData.set('mainTaskScore', gameState.correctAnswers);
+    
+    // 晋升信息
+    if (gameState.promotionLevel) {
+        if (gameState.promotionLevel === 'L3') {
+            experimentData.set('promotionType', '正常提拔');
+        } else if (gameState.promotionLevel === 'L4') {
+            experimentData.set('promotionType', '低破格提拔');
+        } else if (gameState.promotionLevel === 'L5') {
+            experimentData.set('promotionType', '高破格提拔');
+        }
+    } else {
+        experimentData.set('promotionType', 'N/A');
+    }
+    experimentData.set('promotionLevel', gameState.promotionLevel || 'N/A');
+    experimentData.set('promotionReason', gameState.mysteryReason || 'N/A');
+    
+    // 行为数据
+    experimentData.set('ruleScore', gameState.behaviorScores.rule || 0);
+    experimentData.set('reciprocalScore', gameState.behaviorScores.reciprocal || 0);
+    experimentData.set('ruleAnswers', gameState.behaviorData.rule || []);
+    experimentData.set('reciprocalAnswers', gameState.behaviorData.reciprocal || []);
+    
+    // 调查数据
+    experimentData.set('surveyData', gameState.surveyData || {});
+    
+    // 个人特质数据
+    experimentData.set('riskPreference', gameState.personalityData.riskPreference);
+    experimentData.set('honestyScores', gameState.personalityData.honesty);
+    experimentData.set('entitlementScores', gameState.personalityData.entitlement);
+    
+    experimentData.save().then(
+        (result) => {
+            console.log('数据保存成功', result);
+            document.getElementById('participant-id-display').textContent = gameState.participantId;
+            navigateTo('thank-you');
+        },
+        (error) => {
+            console.error('保存失败:', error);
+            // 提供下载选项
+            const data = {
+                participantId: gameState.participantId,
+                startTime: gameState.startTime.toISOString(),
+                endTime: gameState.endTime.toISOString(),
+                duration: ((gameState.endTime - gameState.startTime) / 60000).toFixed(2) + '分钟',
+                demographics: gameState.demographics,
+                yearTaskScore: gameState.yearTaskAnswers.filter(a => a && a.correct).length,
+                mainTaskScore: gameState.correctAnswers,
+                promotionType: gameState.promotionLevel === 'L3' ? '正常提拔' : 
+                               gameState.promotionLevel === 'L4' ? '低破格提拔' : 
+                               gameState.promotionLevel === 'L5' ? '高破格提拔' : 'N/A',
+                promotionLevel: gameState.promotionLevel || 'N/A',
+                promotionReason: gameState.mysteryReason || 'N/A',
+                ruleScore: gameState.behaviorScores.rule || 0,
+                reciprocalScore: gameState.behaviorScores.reciprocal || 0,
+                ruleAnswers: gameState.behaviorData.rule || [],
+                reciprocalAnswers: gameState.behaviorData.reciprocal || [],
+                surveyData: gameState.surveyData || {},
+                personalityData: gameState.personalityData
+            };
+            
+            const dataStr = JSON.stringify(data, null, 2);
+            const dataBlob = new Blob([dataStr], {type: 'application/json'});
+            const url = URL.createObjectURL(dataBlob);
+            
+            const completeSection = document.getElementById('complete');
+            completeSection.innerHTML = `
+                <h2>⚠️ 网络连接失败</h2>
+                <div class="info-box">
+                    <p style="color: #ff9800;">自动提交遇到问题，请下载数据文件并发送给研究人员</p>
+                    <div style="margin: 20px 0;">
+                        <a href="${url}" download="experiment_${gameState.participantId}.json"
+                           style="text-decoration: none;">
+                            <button style="background: #ff9800; color: white; 
+                                           padding: 15px 30px; border: none; 
+                                           border-radius: 8px; font-size: 16px; 
+                                           cursor: pointer;">
+                                📥 下载数据文件
+                            </button>
+                        </a>
+                    </div>
+                    <p>参与者编号：<strong>${gameState.participantId}</strong></p>
+                    <p style="color: #666; font-size: 14px;">
+                        请将下载的文件发送至您的研究邮箱<br>
+                        感谢您的参与！
+                    </p>
+                </div>
+            `;
+        }
+    );
+}
+
+console.log('实验系统已加载完毕，所有功能正常');
+
+</script>
+</body>
+</html>
